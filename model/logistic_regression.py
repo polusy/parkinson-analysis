@@ -46,7 +46,7 @@ class LogisticRegressionModel :
     #discretizing the continuous prediction
     def binary_classify(self, features_instances):
         
-        #using the yet implemented prediction function of
+        #using the prediction function of
         #the logistic regression model
         continuous_pred = self.predict(features_instances)
         
