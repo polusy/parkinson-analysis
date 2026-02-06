@@ -27,17 +27,19 @@ class logistic_regression_model :
     #initializing the logistic regressor with a 
     #regression model
     def __init__(self, regression_model):
-        _linear_regression_model = regression_model
+        self._linear_regression_model = regression_model
 
 
     #logistic transformation of a regression model prediction
-    def logistic_trans(regression_pred):
-        return 1/(1 + np.exp(-regression_pred))
+    @staticmethod
+    def sigmoid(regression_pred):
+        return 1/(1 + np.exp(regression_pred))
+    
     
     #using the previous logistic transformation
-    #to return the prediction
+    #to return the continuous prediction in interval [0,1]
     def predict(self, regression_pred):
-        return self.logistic_trans(regression_pred)
+        return self.sigmoid(regression_pred)
     
 
     #discretizing the continuous prediction
