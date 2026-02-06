@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class lLinearRegressionModel :
+class LinearRegressionModel :
 
     def __init__(self, parameters, bias):
         self._parameters = parameters
