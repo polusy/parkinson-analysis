@@ -1,7 +1,7 @@
 import numpy as np
 
 
-class linear_regression_model :
+class lLinearRegressionModel :
 
     def __init__(self, parameters, bias):
         self._parameters = parameters
@@ -22,29 +22,33 @@ class linear_regression_model :
 
             
 
-class logistic_regression_model :
+class LogisticRegressionModel :
 
     #initializing the logistic regressor with a 
     #regression model
     def __init__(self, regression_model):
-        self._linear_regression_model = regression_model
+        self._regression_model = regression_model
 
 
-    #logistic transformation of a regression model prediction
+    #logistic transformation of any result
     @staticmethod
     def sigmoid(regression_pred):
         return 1/(1 + np.exp(-regression_pred))
     
 
     #using the previous logistic transformation
+    #and the linear model stored 
     #to return the continuous prediction in interval [0,1]
-    def predict(self, regression_pred):
-        return self.sigmoid(regression_pred)
+    def predict(self, features_instances):
+        return self.sigmoid(self._regression_model.predict(features_instances))
     
 
     #discretizing the continuous prediction
-    def binary_classify(self, regression_pred):
-        continuous_pred = self.predict(regression_pred)
+    def binary_classify(self, features_instances):
+        
+        #using the yet implemented prediction function of
+        #the logistic regression model
+        continuous_pred = self.predict(features_instances)
         
         #creating the threshold
         if(continuous_pred < 0.5):
