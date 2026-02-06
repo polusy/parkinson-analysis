@@ -33,9 +33,9 @@ class logistic_regression_model :
     #logistic transformation of a regression model prediction
     @staticmethod
     def sigmoid(regression_pred):
-        return 1/(1 + np.exp(regression_pred))
+        return 1/(1 + np.exp(-regression_pred))
     
-    
+
     #using the previous logistic transformation
     #to return the continuous prediction in interval [0,1]
     def predict(self, regression_pred):
