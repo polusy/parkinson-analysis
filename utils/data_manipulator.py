@@ -4,7 +4,8 @@ from pathlib import Path
 
 class DataNormalizer:
 
-    def normalize_data(self, csv_raw_training_data, csv_raw_test_data):
+    @staticmethod
+    def normalize_data(csv_raw_training_data, csv_raw_test_data):
 
 
         columns_name_list = ['name', 'status']
@@ -14,8 +15,8 @@ class DataNormalizer:
         raw_test_dataframe = pd.read_csv(csv_raw_test_data)
 
         #dropping the predefined columns list from both dataframes
-        modified_training_dataframe = self.drop_dataframe_columns(raw_training_dataframe, columns_name_list)
-        modified_test_dataframe = self.drop_dataframe_columns(raw_test_dataframe, columns_name_list)
+        modified_training_dataframe = DataNormalizer.drop_dataframe_columns(raw_training_dataframe, columns_name_list)
+        modified_test_dataframe = DataNormalizer.drop_dataframe_columns(raw_test_dataframe, columns_name_list)
 
 
         for column in modified_test_dataframe:
@@ -30,8 +31,8 @@ class DataNormalizer:
 
 
         #readding previously dropped dataframe columns
-        self.add_dataframe_columns(raw_test_dataframe, modified_test_dataframe, columns_name_list)
-        self.add_dataframe_columns(raw_training_dataframe, modified_training_dataframe, columns_name_list)
+        DataNormalizer.add_dataframe_columns(raw_test_dataframe, modified_test_dataframe, columns_name_list)
+        DataNormalizer.add_dataframe_columns(raw_training_dataframe, modified_training_dataframe, columns_name_list)
 
 
         #todo --> convert dataframe to csv and store them in the data folder as
@@ -59,9 +60,11 @@ class DataNormalizer:
             extracted_dataframe_columns.append(dataframe1[column])
 
 
-        #add each exctracted column in the new dataframe
+        #add each exctracted column (non-features columns) to the new dataframe
+        #adding each extracted column in position 0, so we have non features column
+        #at the beginning of the dataframe
         for extracted_column in extracted_dataframe_columns:
-            dataframe2.insert(1, extracted_column.name, extracted_column)
+            dataframe2.insert(0, extracted_column.name, extracted_column)
             
 
 
@@ -80,8 +83,8 @@ class DataNormalizer:
 
 
 
-
-    def convert_dataframe_to_csv(self, dataframe, path):
+    
+    def convert_dataframe_to_csv(dataframe, path):
 
         
         #converting the new normalized dataframe to a csv
