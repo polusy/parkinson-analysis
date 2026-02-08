@@ -22,7 +22,7 @@ class DataNormalizer:
 
             #first, updating the raw test dataframe with normalized values, with standard deviation and mean derived
             #from raw training dataframe
-            modified_test_dataframe[column] = (modified_training_dataframe[column] - modified_training_dataframe[column].mean())/modified_training_dataframe[column].std()
+            modified_test_dataframe[column] = (modified_test_dataframe[column] - modified_training_dataframe[column].mean())/modified_training_dataframe[column].std()
 
             #in order not to leak any test set informations to the training set
             #we update separately the new normalized values of the training set
