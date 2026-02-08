@@ -35,8 +35,11 @@ class DataNormalizer:
         DataNormalizer.add_dataframe_columns(raw_training_dataframe, modified_training_dataframe, columns_name_list)
 
 
-        #todo --> convert dataframe to csv and store them in the data folder as
+       
+        #convert dataframe to csv and store them in the data folder as
         #normalized_parkinsons_training and normalized_parkinsons_test
+        DataNormalizer.convert_dataframe_to_csv(modified_test_dataframe, 'data/normalized_parkinsons_test.data')
+        DataNormalizer.convert_dataframe_to_csv(modified_training_dataframe, 'data/normalized_parkinsons_training.data')
 
 
 
