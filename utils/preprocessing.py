@@ -1,5 +1,6 @@
 import pandas as pd
 from pathlib import Path
+import random
 
 
 class DataNormalizer:
@@ -104,7 +105,7 @@ class DataNormalizer:
 class DataSplitter:
 
 
-    def split(raw_csv_data):
+    def split(raw_csv_data, test_ratio):
 
         #better implementation could have passed to split function, the ratio between
         #number of training rows and total rows number in the raw csv file
@@ -113,9 +114,10 @@ class DataSplitter:
         raw_dataframe = pd.read_csv(raw_csv_data)
 
         #extracting a specific range of rows in the dataframe
-        training_dataframe  = raw_dataframe.iloc[0:147] #first 148 for training set
-        test_dataframe = raw_dataframe.iloc[148:196] #last 49 for test set
+        training_dataframe = raw_dataframe.iloc[0:147] #first 148 rows of dataframe
+        test_dataframe = raw_dataframe.iloc[147:] #last rows for test set
 
+        
         #converting the new exctracted dataframes to different csv file in data folder
         DataNormalizer.convert_dataframe_to_csv(training_dataframe, "data/raw_parkinsons_training.data")
         DataNormalizer.convert_dataframe_to_csv(test_dataframe, "data/raw_parkinsons_test.data")
