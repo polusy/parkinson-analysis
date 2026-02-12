@@ -110,6 +110,21 @@ class DataSplitter:
     #contare le righe in multipli di 6 (numero di sample per paziente)
     #quindi prendere un multiplo di 6 righe.
 
-    pass
+
+    def split(raw_csv_data):
+
+        #rescuing the complete dataframe 
+        raw_dataframe = pd.read_csv(raw_csv_data)
+
+        #extracting a specific range of rows in the dataframe
+        training_dataframe  = raw_dataframe[0:147] #first 148 for training set
+        test_dataframe = raw_dataframe[148:196] #last 49 for test set
+
+        #converting the new exctracted dataframes to different csv file in data folder
+        DataNormalizer.convert_dataframe_to_csv(training_dataframe, "data/raw_parkinsons_training.data")
+        DataNormalizer.convert_dataframe_to_csv(test_dataframe, "data/raw_parkinsons_test.data")
+
+
+
 
 
