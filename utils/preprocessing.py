@@ -1,6 +1,6 @@
 import pandas as pd
 from pathlib import Path
-import random
+from sklearn.model_selection import GroupShuffleSplit
 
 
 class DataNormalizer:
@@ -105,7 +105,7 @@ class DataNormalizer:
 class DataSplitter:
 
 
-    def split(raw_csv_data, test_ratio):
+    def split(raw_csv_data, test_size):
 
         #better implementation could have passed to split function, the ratio between
         #number of training rows and total rows number in the raw csv file
@@ -113,11 +113,26 @@ class DataSplitter:
         #rescuing the complete dataframe 
         raw_dataframe = pd.read_csv(raw_csv_data)
 
-        #extracting a specific range of rows in the dataframe
-        training_dataframe = raw_dataframe.iloc[0:147] #first 148 rows of dataframe
-        test_dataframe = raw_dataframe.iloc[147:] #last rows for test set
+        #creating the shuffle split using a random state (known seed)
+        #the train size
+        gss = GroupShuffleSplit(n_splits=1, train_size= (1-test_size), random_state=42)
 
-        
+        #we take alle the values from the name column
+        #then we split the values in two pieces
+        # - the first part (patient id)
+        # - the second part (sample number from the same patient)
+        #then we take the first part to create groups
+        groups = raw_dataframe['name'].str.rsplit('_', n=1).str[0]
+
+        #using the previous split and the groups generated (set of rows
+        #with samples grouped by the same patient id)
+        train_idx, test_idx = next(gss.split(raw_dataframe, groups=groups))
+
+        #creating new dataframes, with the generated splits
+        training_dataframe = raw_dataframe.iloc[train_idx]
+        test_dataframe = raw_dataframe.iloc[test_idx]
+
+
         #converting the new exctracted dataframes to different csv file in data folder
         DataNormalizer.convert_dataframe_to_csv(training_dataframe, "data/raw_parkinsons_training.data")
         DataNormalizer.convert_dataframe_to_csv(test_dataframe, "data/raw_parkinsons_test.data")
