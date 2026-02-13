@@ -4,9 +4,8 @@ import numpy as np
 class LinearRegressionModel :
 
     #parametrized init
-    def __init__(self, parameters, bias):
+    def __init__(self, parameters):
         self._parameters = parameters
-        self._bias = bias
 
 
     #non-parametrized init, 
@@ -20,8 +19,7 @@ class LinearRegressionModel :
 
     def predict(self, features_instances):
 
-        #initialize prediction with model prior bias
-        prediction = self._bias
+        prediction = 0
         i = 0
 
         #computing the product between each feature instance
@@ -39,6 +37,9 @@ class LinearRegressionModel :
     #of given index
     def get_parameter(self, param_index):
         return self._parameter[param_index]
+    
+    def get_parameters(self):
+        return self._parameters
     
     #passing parameter index and value to be set
     def set_parameter(self, param_index, value):
@@ -85,4 +86,11 @@ class LogisticRegressionModel :
             return 0
         else:
             return 1
+        
+        
+    def get_regression_model(self):
+        return self._regression_model
+    
+
+
         
