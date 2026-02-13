@@ -101,9 +101,12 @@ class LogisticRegressorTraining:
 
                     #do not udate the bias term with regularization
                     if i != len(parameters_after_epoch) - 1:
-                        #new update for L2 regularization
+                        
+                        #computing the L2 regularization term
+                        L2_reg_term = learning_rate* ((reg_hyperparameter)/current_batch_examples_num)*parameter_i
+
+                        #new update for L2 regularization, subtracting from the previously updated parameter the L2 reg. term
                         updated_parameter_i = logistic_regressor.get_regression_model().get_parameter(i)
-                        L2_reg_term = learning_rate* ((reg_hyperparameter)/current_batch_examples_num)*updated_parameter_i
                         logistic_regressor.set_parameter(i, updated_parameter_i - L2_reg_term)
 
 
@@ -171,7 +174,7 @@ class LinearRegressorTraining:
             epoch_gradient = [0 for i in range(len(input_features_batches[0].columns) + 1)]
             
             #saving the model parameters before starting the training epoch
-            parameters_before_epoch = linear_regressor.get_regression_model().get_parameters()
+            parameters_before_epoch = linear_regressor.get_parameters()
 
             #iterating over input features and target feature batches
             for input_feature_batch, target_feature_batch in zip(input_features_batches, target_feature_batches):
@@ -214,16 +217,19 @@ class LinearRegressorTraining:
                 for i in range(len(parameters_before_epoch)):
 
                     #taking the previous value of the parameter
-                    parameter_i = linear_regressor.get_regression_model().get_parameter(i)
+                    parameter_i = linear_regressor.get_parameter(i)
 
                     #updating the parameter subtracting from it the loss gradient 
                     linear_regressor.set_parameter(i, parameter_i - learning_rate*loss_gradient[i])
 
                     #the bias term is not updated with regularization
                     if i != len(parameters_after_epoch) - 1:
-                        #new update for L2 regularization
-                        updated_parameter_i = linear_regressor.get_regression_model().get_parameter(i)
-                        L2_reg_term = learning_rate* ((reg_hyperparameter)/current_batch_examples_num)*updated_parameter_i
+
+                        #computing the L2 regularization term
+                        L2_reg_term = learning_rate* ((reg_hyperparameter)/current_batch_examples_num)*parameter_i
+
+                        #new update for L2 regularization, subtracting from the previously updated parameter the L2 reg. term
+                        updated_parameter_i = linear_regressor.get_parameter(i)
                         linear_regressor.set_parameter(i, updated_parameter_i - L2_reg_term)
 
 
@@ -231,7 +237,7 @@ class LinearRegressorTraining:
             epoch_gradient = [ddw_sum/batches_num for ddw_sum in epoch_gradient]
 
             #rescuing the parameters after an epoch
-            parameters_after_epoch = linear_regressor.get_regression_model().get_parameters()
+            parameters_after_epoch = linear_regressor.get_parameters()
         
 
 
