@@ -92,5 +92,9 @@ class LogisticRegressionModel :
         return self._regression_model
     
 
+    def set_parameter(self, param_index, value):
+        self._regression_model.set_parameter[param_index, value]
+    
+
 
         
