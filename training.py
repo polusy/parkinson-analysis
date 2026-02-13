@@ -8,6 +8,7 @@ class LogisticRegressorTraining:
 
     #assumed logistic regressor to be already initialized, by initializing 
     #linear regressor parameter values
+    @staticmethod
     def fit(logistic_regressor, reg_hyperparameter, batches_num, learning_rate, training_csv):
 
         training_dataframe = pd.read_csv(training_csv)
@@ -38,7 +39,7 @@ class LogisticRegressorTraining:
         #iterating in epochs if 
         # - the gradient norm is still too high
         # - the norm of the subtraction between parameters after and befor epoch is too high
-        while (linalg.norm(np.array(loss_gradient), 'fro') > gradient_norm_tol) and linalg.norm(subtract(parameters_after_epoch, parameters_before_epoch)) > parameters_subtraction_norm_tol :
+        while (linalg.norm(np.array(loss_gradient)) > gradient_norm_tol) and linalg.norm(subtract(parameters_after_epoch, parameters_before_epoch)) > parameters_subtraction_norm_tol :
         
             #saving the model parameters before starting the training epoch
             parameters_before_epoch = logistic_regressor.get_regression_model().get_parameters()
@@ -50,17 +51,17 @@ class LogisticRegressorTraining:
 
                 #re-setting the 0 value for loss gradient, adding 1 to range to include
                 #the partial derivative of loss to respect with bias
-                loss_gradient = [0 for i in range(len(training_dataframe.columns) + 1)]
+                loss_gradient = [0 for i in range(len(input_features_batches[0].columns) + 1)]
 
                 #iterating over the example in the batch
-                for example_features, example_target in zip(input_feature_batch.iterrows(), target_feature_batch.items()):
+                for (example_index,example_features), (target_index,example_target) in zip(input_feature_batch.iterrows(), target_feature_batch.items()):
 
                     vectorized_example_features = example_features.to_numpy()
 
                     #computing the logistic regressor prediction and the loss between the target value
                     #and the target prediction
                     target_prediction = logistic_regressor.predict(vectorized_example_features)
-                    example_prediction_loss = example_target - target_prediction
+                    example_prediction_loss = target_prediction - example_target 
 
                     #iterating over the example features to calculate the partial derivative
                     #of loss with respect to each parameter in the regression model
@@ -80,7 +81,7 @@ class LogisticRegressorTraining:
 
                 
                 #updating linear regression model parameters
-                for i in range(len(parameters_before_epoch) + 1):
+                for i in range(len(parameters_before_epoch)):
 
                     #taking the previous value of the parameter
                     parameter_i = logistic_regressor.get_regression_model().get_parameter(i)
