@@ -22,14 +22,18 @@ class LogisticRegressorTraining:
         input_features_batches = [batches[i].drop(['name', 'status']) for i in range(len(batches))]
         target_feature_batches = [batches[i]['status'] for i in range(len(batches))]
 
+        batches_num = len(input_features_batches)
+
         #initializing the loss gradient and the gradient tollerance value
         #the dimension of the gradient is taken from the number
         #of columns of a random batch in the input_features_batches
         loss_gradient = [100 for i in range(len(input_features_batches[0].columns) + 1)]
-        gradient_norm_tol = 10**-2
+        epoch_gradient = [0 for i in range(len(input_features_batches[0].columns) + 1)]
+        
 
-        #initialiazing the parameters subtraction norm tollerance value
-        parameters_subtraction_norm_tol = 10**-2
+        #initialiazing the tollerance values
+        parameters_subtraction_norm_tol = 10**-3
+        gradient_norm_tol = 10**-3
 
         #initializing the first with real parameters value and the second with high values
         #such that at first, their subtraction is high
@@ -39,8 +43,8 @@ class LogisticRegressorTraining:
         #iterating in epochs if 
         # - the gradient norm is still too high
         # - the norm of the subtraction between parameters after and befor epoch is too high
-        while (linalg.norm(np.array(loss_gradient)) > gradient_norm_tol) and linalg.norm(subtract(parameters_after_epoch, parameters_before_epoch)) > parameters_subtraction_norm_tol :
-        
+        while (linalg.norm(np.array(epoch_gradient)) > gradient_norm_tol) and linalg.norm(subtract(parameters_after_epoch, parameters_before_epoch)) > parameters_subtraction_norm_tol :
+
             #saving the model parameters before starting the training epoch
             parameters_before_epoch = logistic_regressor.get_regression_model().get_parameters()
 
@@ -70,7 +74,7 @@ class LogisticRegressorTraining:
                         #distinguish the partial derivative of loss with respect to bias (first parameter)
                         #from the partial derivatives of loss with respect to other parameters
                         if i == len(vectorized_example_features):
-                            loss_gradient[i] = example_prediction_loss #derivative with respect to bias
+                            loss_gradient[i] += example_prediction_loss #derivative with respect to bias
                         else:
                             loss_gradient[i] += example_prediction_loss*vectorized_example_features[i]
 
@@ -78,6 +82,7 @@ class LogisticRegressorTraining:
                 #to compute partial derivates of mean log loss
                 for i in range(len(vectorized_example_features) + 1):
                     loss_gradient[i] /= current_batch_examples_num
+                    epoch_gradient[i] = loss_gradient[i]
 
                 
                 #updating linear regression model parameters
@@ -90,12 +95,15 @@ class LogisticRegressorTraining:
                     logistic_regressor.set_parameter(i, parameter_i - learning_rate*loss_gradient[i])
 
                     #do not udate the bias term with regularization
-                    if i != len(parameters_after_epoch):
+                    if i != len(parameters_after_epoch) - 1:
                         #new update for L2 regularization
                         updated_parameter_i = logistic_regressor.get_regression_model().get_parameter(i)
-                        L2_reg_term = learning_rate* ((reg_hyperparameter)/current_batch_examples_num)*parameter_i
+                        L2_reg_term = learning_rate* ((reg_hyperparameter)/current_batch_examples_num)*updated_parameter_i
                         logistic_regressor.set_parameter(i, updated_parameter_i - L2_reg_term)
 
+
+            #updating the epoch gradient with the mean of gradients over all the batches 
+            epoch_gradient = [epoch_gradient/batches_num for i in range(len(epoch_gradient))]
 
             #rescuing the parameters after an epoch
             parameters_after_epoch = logistic_regressor.get_regression_model().get_parameters()
