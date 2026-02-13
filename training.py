@@ -1,7 +1,6 @@
 from numpy import linalg,subtract
 import numpy as np
 import pandas as pd
-import random 
 
 
 
@@ -26,10 +25,10 @@ class LogisticRegressorTraining:
         #the dimension of the gradient is taken from the number
         #of columns of a random batch in the input_features_batches
         loss_gradient = [100 for i in range(len(input_features_batches[0].columns) + 1)]
-        gradient_norm_tol = 10^-2
+        gradient_norm_tol = 10**-2
 
         #initialiazing the parameters subtraction norm tollerance value
-        parameters_subtraction_norm_tol = 10^-2
+        parameters_subtraction_norm_tol = 10**-2
 
         #initializing the first with real parameters value and the second with high values
         #such that at first, their subtraction is high
@@ -39,7 +38,7 @@ class LogisticRegressorTraining:
         #iterating in epochs if 
         # - the gradient norm is still too high
         # - the norm of the subtraction between parameters after and befor epoch is too high
-        while (linalg.norm(loss_gradient, 'fro') > gradient_norm_tol) and linalg.norm(subtract(parameters_after_epoch, parameters_before_epoch)) > parameters_subtraction_norm_tol :
+        while (linalg.norm(np.array(loss_gradient), 'fro') > gradient_norm_tol) and linalg.norm(subtract(parameters_after_epoch, parameters_before_epoch)) > parameters_subtraction_norm_tol :
         
             #saving the model parameters before starting the training epoch
             parameters_before_epoch = logistic_regressor.get_regression_model().get_parameters()
@@ -49,11 +48,12 @@ class LogisticRegressorTraining:
 
                 current_batch_examples_num = len(input_feature_batch)
 
-                #re-setting the 0 value for loss gradient
-                loss_gradient = [0 for i in range(len(training_dataframe.columns))]
+                #re-setting the 0 value for loss gradient, adding 1 to range to include
+                #the partial derivative of loss to respect with bias
+                loss_gradient = [0 for i in range(len(training_dataframe.columns) + 1)]
 
                 #iterating over the example in the batch
-                for example_features, example_target in zip(input_feature_batch.iterrows(), target_feature_batch.iterrows()):
+                for example_features, example_target in zip(input_feature_batch.iterrows(), target_feature_batch.items()):
 
                     vectorized_example_features = example_features.to_numpy()
 
@@ -91,8 +91,9 @@ class LogisticRegressorTraining:
                     #do not udate the bias term with regularization
                     if i != len(parameters_after_epoch):
                         #new update for L2 regularization
+                        updated_parameter_i = logistic_regressor.get_regression_model().get_parameter(i)
                         L2_reg_term = learning_rate* ((reg_hyperparameter)/current_batch_examples_num)*parameter_i
-                        logistic_regressor.set_parameter(i, parameter_i - L2_reg_term)
+                        logistic_regressor.set_parameter(i, updated_parameter_i - L2_reg_term)
 
 
             #rescuing the parameters after an epoch
