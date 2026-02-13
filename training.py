@@ -22,8 +22,6 @@ class LogisticRegressorTraining:
         input_features_batches = [batches[i].drop(['name', 'status']) for i in range(len(batches))]
         target_feature_batches = [batches[i]['status'] for i in range(len(batches))]
 
-        batches_num = len(input_features_batches)
-
         #initializing the loss gradient and the gradient tollerance value
         #the dimension of the gradient is taken from the number
         #of columns of a random batch in the input_features_batches
