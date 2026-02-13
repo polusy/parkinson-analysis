@@ -143,3 +143,48 @@ class DataSplitter:
 
 
 
+    def create_mini_batches(training_csv, batches_num):
+
+        training_dataframe = pd.read_csv(training_csv)
+
+        #computing total rows number in dataframe
+        total_rows_num = len(training_dataframe.index)
+
+        #computing rows number per batch
+        rows_num_per_batch = total_rows_num/batches_num
+
+        batches = [[] for i in range(batches_num)] #list of batches, as list of mini-dataframes
+        batch_index = 0 #index to be incremented as we create mini-batches in the iteration
+        added_rows_per_batch_counter = 0 #counter of already added rows to a current batch
+
+        #iterating over dataframe rows
+        for row in training_dataframe.iterrows():
+
+            added_rows_per_batch_counter += 1
+
+            #if current batch has less rows than the desired number
+            #we append the row to the current batch
+            if added_rows_per_batch_counter < rows_num_per_batch:
+                batches[batch_index].append(row)
+
+            #resetting the batch rows counter
+            #and moving to a new batch as we 
+            #completed the previous one
+            elif (batch_index + 1) < batches_num:
+                added_rows_per_batch_counter = 1
+                batch_index += 1
+                batches[batch_index].append(row)
+
+            #if some samples remains and 
+            #we surpassed the number of batches requested
+            #we add them to the current one
+            else:
+                batches[batch_index].append(row)
+
+
+        return batches
+
+
+
+
+
