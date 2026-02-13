@@ -3,9 +3,20 @@ import numpy as np
 
 class LinearRegressionModel :
 
+    #parametrized init
     def __init__(self, parameters, bias):
         self._parameters = parameters
         self._bias = bias
+
+
+    #non-parametrized init, 
+    #init every parameters and bias with zero values
+    def __init__(self):
+        self._parameters[:] = 0
+        self._bias = 0
+
+    
+
 
     def predict(self, features_instances):
 
@@ -19,6 +30,22 @@ class LinearRegressionModel :
             prediction += features_instances[i]*self._parameters[i]
 
         return prediction
+    
+    #defining getters and setters
+    def get_bias(self):
+        return self._bias
+
+    def get_parameters(self):
+        return self._parameters
+    
+    def set_parameters(self, parameters):
+        self._parameters = parameters
+
+    def set_bias(self, bias):
+        self._bias = bias
+
+
+
 
             
 
