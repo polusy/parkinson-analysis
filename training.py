@@ -45,6 +45,9 @@ class LogisticRegressorTraining:
         # - the norm of the subtraction between parameters after and befor epoch is too high
         while (linalg.norm(np.array(epoch_gradient)) > gradient_norm_tol) and linalg.norm(subtract(parameters_after_epoch, parameters_before_epoch)) > parameters_subtraction_norm_tol :
 
+            #resetting epoch_gradient at the start
+            epoch_gradient = [0 for i in range(len(input_features_batches[0].columns) + 1)]
+            
             #saving the model parameters before starting the training epoch
             parameters_before_epoch = logistic_regressor.get_regression_model().get_parameters()
 
@@ -82,7 +85,7 @@ class LogisticRegressorTraining:
                 #to compute partial derivates of mean log loss
                 for i in range(len(vectorized_example_features) + 1):
                     loss_gradient[i] /= current_batch_examples_num
-                    epoch_gradient[i] = loss_gradient[i]
+                    epoch_gradient[i] += loss_gradient[i]
 
                 
                 #updating linear regression model parameters
@@ -103,7 +106,7 @@ class LogisticRegressorTraining:
 
 
             #updating the epoch gradient with the mean of gradients over all the batches 
-            epoch_gradient = [epoch_gradient/batches_num for i in range(len(epoch_gradient))]
+            epoch_gradient = [ddw_sum/batches_num for ddw_sum in epoch_gradient]
 
             #rescuing the parameters after an epoch
             parameters_after_epoch = logistic_regressor.get_regression_model().get_parameters()
