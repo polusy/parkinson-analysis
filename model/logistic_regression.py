@@ -35,11 +35,14 @@ class LinearRegressionModel :
     def get_bias(self):
         return self._bias
 
-    def get_parameters(self):
-        return self._parameters
+    #returning value of a specific parameter
+    #of given index
+    def get_parameter(self, param_index):
+        return self._parameter[param_index]
     
-    def set_parameters(self, parameters):
-        self._parameters = parameters
+    #passing parameter index and value to be set
+    def set_parameter(self, param_index, value):
+        self._parameters[param_index] = value
 
     def set_bias(self, bias):
         self._bias = bias
