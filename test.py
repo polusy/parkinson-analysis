@@ -33,7 +33,7 @@ class LogisticRegressorTest:
 
         return mean_log_loss
     
-    
+
     
 
     def create_prediction_residuals_dataframe(logistic_regressor, test_dataframe):
@@ -49,7 +49,10 @@ class LogisticRegressorTest:
 
             #computing dhe difference between log regressor prediction and example target
             target_prediction = logistic_regressor.predict(vectorized_example_features)
-            example_target = example_target - target_prediction
+            residual = example_target - target_prediction
+
+            #storing the residuals in the target dataframe, at the right index
+            target_feature_dataframe.at[target_index] = residual
 
 
         #return the complete dataframe, with target value as residuals
