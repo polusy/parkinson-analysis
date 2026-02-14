@@ -15,7 +15,8 @@ class HyperparameterRegularizationCrossValidation:
 
         #creating the split using the scikit learn grouped k fold
         #in this way each group does not appear in different folders
-        gkf = GroupKFold(n_splits = 6) #divide the non-test dataframe in 6 folders
+        n_splits = 6
+        gkf = GroupKFold(n_splits = n_splits) #divide the non-test dataframe in 6 folders
 
         #we take alle the values from the name column
         #then we split the values in two pieces
@@ -26,7 +27,7 @@ class HyperparameterRegularizationCrossValidation:
 
         #instatiating a list in which each value will be
         #the log loss of a validation folder
-        k_folds_log_loss_list = [0 for i in range(len(reg_hyperparam_list))]
+        k_folds_log_loss_list = [0 for i in range(n_splits)]
         iteration_counter = 0
 
         #we use a list of statistics (mean , stdev) of loss 
@@ -38,6 +39,8 @@ class HyperparameterRegularizationCrossValidation:
         #do a k-fold on each of them, and then we compare the mean log-loss
         #on the validations set of each cross-validation
         for i in range(len(reg_hyperparam_list)):
+
+            iteration_counter = 0
 
             #using the 6 split, in each iteration we take the index of the validation folder
             #and the index of the training folders, so we train the logistic regressor on the
@@ -64,6 +67,8 @@ class HyperparameterRegularizationCrossValidation:
 
             #storing the statistics for a given lambda hyperparameter in a stats list
             reg_hyperparam_statistics[i] = (reg_hyperparam_list[i],mean_log_loss,std_deviation)
+
+            return reg_hyperparam_statistics
 
 
 
