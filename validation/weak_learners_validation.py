@@ -53,7 +53,7 @@ class HyperparameterRegularizationCrossValidation:
                 current_log_regressor = LogisticRegressionModel(LinearRegressionModel())
 
                 #training the logistic regressor on the training folders and validate it over the validation folder
-                LogisticRegressorTraining.fit(current_log_regressor, reg_hyperparam_list[i], batches_num=5, learning_rate=0.01, training_data = current_training_folders)
+                LogisticRegressorTraining.fit(current_log_regressor, reg_hyperparam_list[i], batches_num=5, learning_rate=0.01, training_dataframe = current_training_folders)
                 k_folds_log_loss_list[iteration_counter] = LogisticRegressorTest.test(current_log_regressor, current_validation_folder)
 
                 #saving number of iteration made
