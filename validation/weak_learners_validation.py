@@ -11,7 +11,7 @@ class HyperparameterRegularizationCrossValidation:
     the first weak learner (logistic regressor) and the regularization hyperparameter 
     of the other weak learners (linear regressors)"""
 
-    def log_regressor_hyperparam_reg_cross_validate(logistic_regressor, reg_hyperparam_list, training_dataframe):
+    def log_regressor_hyperparam_reg_cross_validate(reg_hyperparam_list, training_dataframe):
 
         #creating the split using the scikit learn grouped k fold
         #in this way each group does not appear in different folders
@@ -53,7 +53,7 @@ class HyperparameterRegularizationCrossValidation:
                 current_log_regressor = LogisticRegressionModel(LinearRegressionModel())
 
                 #training the logistic regressor on the training folders and validate it over the validation folder
-                LogisticRegressorTraining.fit(current_log_regressor, reg_hyperparam_list[i], batches_num=5, learning_rate=0.01, current_training_folders)
+                LogisticRegressorTraining.fit(current_log_regressor, reg_hyperparam_list[i], batches_num=5, learning_rate=0.01, training_data = current_training_folders)
                 k_folds_log_loss_list[iteration_counter] = LogisticRegressorTest.test(current_log_regressor, current_validation_folder)
 
                 #saving number of iteration made
@@ -68,7 +68,7 @@ class HyperparameterRegularizationCrossValidation:
             #storing the statistics for a given lambda hyperparameter in a stats list
             reg_hyperparam_statistics[i] = (reg_hyperparam_list[i],mean_log_loss,std_deviation)
 
-            return reg_hyperparam_statistics
+        return reg_hyperparam_statistics
 
 
 
