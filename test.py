@@ -22,7 +22,7 @@ class LogisticRegressorTest:
             #computing the logistic regressor prediction and the log loss between
             #the target prediction and the target real value, cumulatin it in a variable
             target_prediction = logistic_regressor.predict(vectorized_example_features)
-            prediction_cumulative_log_loss += (example_target)*(-np.log2(target_prediction)) + (1 - example_target)*(-np.log2(1 - target_prediction))
+            prediction_cumulative_log_loss += (example_target)*(-np.log(target_prediction)) + (1 - example_target)*(-np.log(1 - target_prediction))
 
 
         #to compute the mean log loss, take the cumulative log loss and divide it 
