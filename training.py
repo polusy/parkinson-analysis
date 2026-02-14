@@ -9,13 +9,11 @@ class LogisticRegressorTraining:
     #assumed logistic regressor to be already initialized, by initializing 
     #linear regressor parameter values
     @staticmethod
-    def fit(logistic_regressor, reg_hyperparameter, batches_num, learning_rate, training_csv):
+    def fit(logistic_regressor, reg_hyperparameter, batches_num, learning_rate, training_dataframe):
 
         """fitting the logistic regressor to a specific training dataset
         given a regularization hyperparameter, the number of batches to be trained on
         and the learning rate of the gradient descent"""
-
-        training_dataframe = pd.read_csv(training_csv)
 
         #creating batches of samples (mini dataframe), given a requested number of batches
         #dont care about same patient samples distributed over different batches
@@ -131,14 +129,11 @@ class LogisticRegressorTraining:
 
 class LinearRegressorTraining:
 
-    def fit(linear_regressor, reg_hyperparameter, batches_num, learning_rate, training_csv):
+    def fit(linear_regressor, reg_hyperparameter, batches_num, learning_rate, training_dataframe):
 
         """fitting the linear regressor to a specific training dataset
         given a regularization hyperparameter, the number of batches to be trained on
         and the learning rate of the gradient descent"""
-
-
-        training_dataframe = pd.read_csv(training_csv)
 
         #creating batches of samples (mini-dataframes), given a requested number of batches
         #dont care about same patient samples distributed over different batches
