@@ -135,7 +135,7 @@ class HyperparameterRegularizationCrossValidation:
                 current_log_regressor = LogisticRegressionModel(LinearRegressionModel())
 
                 #training the logistic regressor on the training folders 
-                LogisticRegressorTraining.fit(current_log_regressor, log_regressor_reg_hyperparameter, batches_num=5, learning_rate=0.01, training_data = current_training_folders)
+                LogisticRegressorTraining.fit(current_log_regressor, log_regressor_reg_hyperparameter, batches_num=5, learning_rate=0.01, training_dataframe = current_training_folders)
 
                 #creating the training dataframe residuals and the validation folder residuals
                 #as we predict the value in the training set and the value in the validation set
@@ -161,11 +161,11 @@ class HyperparameterRegularizationCrossValidation:
         
             #computing the MSE and the standard deviation between different validations set
             #given a fixed reg hyperparameter
-            mean_log_loss = mean(k_folds_mse_list)
+            mean_squared_error = mean(k_folds_mse_list)
             std_deviation = stdev(k_folds_mse_list)
 
             #storing the statistics for a given lambda hyperparameter in a stats list
-            reg_hyperparam_statistics[i] = (lin_regressor_reg_hyperparam_list[i],mean_log_loss,std_deviation)
+            reg_hyperparam_statistics[i] = (lin_regressor_reg_hyperparam_list[i],mean_squared_error,std_deviation)
 
         return reg_hyperparam_statistics
 
