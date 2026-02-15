@@ -8,8 +8,8 @@ class LinearRegressionModel :
 
     #non-parametrized init, 
     #init every parameters and bias with zero values
-    def __init__(self):
-        self._parameters[:] = 0
+    def __init__(self, num_input_features):
+        self._parameters = [0] * (num_input_features + 1)
 
     
 
