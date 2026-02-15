@@ -10,7 +10,6 @@ class LinearRegressionModel :
     #init every parameters and bias with zero values
     def __init__(self):
         self._parameters[:] = 0
-        self._bias = 0
 
     
 
@@ -26,7 +25,7 @@ class LinearRegressionModel :
             prediction += features_instances[i]*self._parameters[i]
 
         #adding the bias (parameter indipendent from the features instances)
-        bias = self.get_parameters[len(features_instances)] #we store it at the last index of the parameters list
+        bias = self._parameters[len(features_instances)] #we store it at the last index of the parameters list
         prediction += bias
 
         return  prediction
@@ -261,7 +260,7 @@ class LogisticRegressionModel :
                 for i in range(len(parameters_before_epoch)):
 
                     #taking the previous value of the parameter
-                    parameter_i = self._regression_model.get_parameter(i).copy()
+                    parameter_i = self._regression_model.get_parameter(i)
 
                     #updating the parameter subtracting from it the loss gradient 
                     self.set_parameter(i, parameter_i - learning_rate*loss_gradient[i])
@@ -273,7 +272,7 @@ class LogisticRegressionModel :
                         L2_reg_term = learning_rate* ((reg_hyperparameter)/current_batch_examples_num)*parameter_i
 
                         #new update for L2 regularization, subtracting from the previously updated parameter the L2 reg. term
-                        updated_parameter_i = self._regression_model.get_parameter(i).copy()
+                        updated_parameter_i = self._regression_model.get_parameter(i)
                         self.set_parameter(i, updated_parameter_i - L2_reg_term)
 
 
