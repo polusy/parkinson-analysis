@@ -4,6 +4,7 @@ from model.logistic_regression import LogisticRegressionModel
 
 class DataframeManipulation:
 
+    @staticmethod
     def create_residuals_df_from_regressor(logistic_regressor, dataframe):
 
         """method to store in a dataframe target column, the difference
@@ -33,7 +34,7 @@ class DataframeManipulation:
 
 
 
-
+    @staticmethod
     def create_residuals_df_from_regressors(regressors, dataframe):
 
         """method to store in a dataframe target column, the difference
