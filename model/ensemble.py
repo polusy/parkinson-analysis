@@ -1,5 +1,8 @@
 
 from logistic_regression import LogisticRegressionModel,LinearRegressionModel
+from training import LogisticRegressorTraining, LinearRegressorTraining
+from test import LogisticRegressorTest
+from utils.dataframe_manipulation import DataframeManipulation
 
 class GradientBoostingModel:
 
@@ -23,7 +26,7 @@ class GradientBoostingModel:
                 else:
                     self._weak_learners.append(LinearRegressionModel())
 
-                    
+
 
 
     def predict(self, input_features):
@@ -42,14 +45,53 @@ class GradientBoostingModel:
             else:
                 total_logit_sum += self._weak_learners[i].predict(input_features)
 
+        
+        #passing the sigmoid of the total logit value to compress it in [0,1]
+        return LogisticRegressionModel.sigmoid(total_logit_sum)
+    
 
 
 
 
-    #predict : passo dal primo regressore logistico
-    #uso valore predetto, e ci aggiungo tutte le predizioni
-    #in sequenza degli altri regressori lineari, dopo faccio passare 
-    #per funzione sigmoide
+
+    def training(self, logistic_reg_hyperparameter, linear_reg_hyperparameter, batches_num, learning_rate, training_dataframe):
+
+        i_residuals_training_dataframe = training_dataframe
+        
+        for i in range(len(self._weak_learners)):
+
+            if i == 0:
+                #training the first weak learner (logistic regression model) and producing the residuals value
+                #for the next weak learner
+                LogisticRegressorTraining.fit(self._weak_learners[i], logistic_reg_hyperparameter, batches_num=5, learning_rate=0.01, training_dataframe=i_residuals_training_dataframe)
+                i_residuals_training_dataframe = LogisticRegressorTest.create_prediction_residuals_dataframe(self._weak_learners[i], training_dataframe)
+
+            
+            else:
+                #training the weak learner at index i in the weak learners sequence, on the residuals
+                #of the prediction of the previous ensemble
+                LinearRegressorTraining.fit(self._weak_learners[i], linear_reg_hyperparameter, batches_num=batches_num, learning_rate=learning_rate, training_dataframe=i_residuals_training_dataframe)
+
+                #saving the list of current trained regressors
+                current_regressors = [self._weak_learners[j] for j in range(i)]
+
+                #storing in a new dataframe, at the status column, the residuals computed as: 
+                # target value - sigmoid(total logit of weak learners sequence)
+                i_residuals_training_dataframe = DataframeManipulation.create_residuals_df_from_regressors(current_regressors, i_residuals_training_dataframe)
+                
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     #training : 
