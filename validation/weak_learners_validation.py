@@ -1,5 +1,5 @@
 from sklearn.model_selection import GroupKFold
-from training import LogisticRegressorTraining, LinearRegressorTraining
+from utils.constants import NUM_INSTANCE_FEATURES
 from model.logistic_regression import LogisticRegressionModel, LinearRegressionModel
 from test import LogisticRegressorTest,LinearRegressorTest
 from utils.dataframe_manipulation import DataframeManipulation
@@ -52,10 +52,10 @@ class HyperparameterRegularizationCrossValidation:
                 current_training_folders = training_dataframe.iloc[train_idx]
                 current_validation_folder = training_dataframe.iloc[validation_idx]
 
-                current_log_regressor = LogisticRegressionModel(LinearRegressionModel())
+                current_log_regressor = LogisticRegressionModel(LinearRegressionModel(NUM_INSTANCE_FEATURES))
 
                 #training the logistic regressor on the training folders and validate it over the validation folder
-                LogisticRegressorTraining.fit(current_log_regressor, reg_hyperparam_list[i], batches_num=5, learning_rate=0.01, training_dataframe = current_training_folders)
+                current_log_regressor.fit(reg_hyperparam_list[i], batches_num=5, learning_rate=0.01, training_dataframe = current_training_folders)
                 k_folds_log_loss_list[iteration_counter] = LogisticRegressorTest.test(current_log_regressor, current_validation_folder)
 
                 #saving number of iteration made
@@ -134,10 +134,10 @@ class HyperparameterRegularizationCrossValidation:
                 current_training_folders = training_dataframe.iloc[train_idx]
                 current_validation_folder = training_dataframe.iloc[validation_idx]
 
-                current_log_regressor = LogisticRegressionModel(LinearRegressionModel())
+                current_log_regressor = LogisticRegressionModel(LinearRegressionModel(NUM_INSTANCE_FEATURES))
 
                 #training the logistic regressor on the training folders 
-                LogisticRegressorTraining.fit(current_log_regressor, log_regressor_reg_hyperparameter, batches_num=5, learning_rate=0.01, training_dataframe = current_training_folders)
+                current_log_regressor.fit(log_regressor_reg_hyperparameter, batches_num=5, learning_rate=0.01, training_dataframe = current_training_folders)
 
                 #creating the training dataframe residuals and the validation folder residuals
                 #as we predict the value in the training set and the value in the validation set
@@ -149,8 +149,8 @@ class HyperparameterRegularizationCrossValidation:
 
                 #training a new linear regression model on the residuals training dataframe
                 #then testing it on residuals validation dataframe
-                current_lin_regressor = LinearRegressionModel()
-                LinearRegressorTraining.fit(current_lin_regressor, lin_regressor_reg_hyperparam_list[i], batches_num=5, learning_rate=0.01, training_dataframe=residuals_training_dataframe)
+                current_lin_regressor = LinearRegressionModel(NUM_INSTANCE_FEATURES)
+                current_lin_regressor.fit(lin_regressor_reg_hyperparam_list[i], batches_num=5, learning_rate=0.01, training_dataframe=residuals_training_dataframe)
                 mean_squared_error = LinearRegressorTest.test(current_lin_regressor, residuals_validation_dataframe)
 
                 #storing the specific mean squared error evaluated on prediction on validation folder
