@@ -1,8 +1,8 @@
 
 from logistic_regression import LogisticRegressionModel,LinearRegressionModel
-from training import LogisticRegressorTraining, LinearRegressorTraining
 from test import LogisticRegressorTest
 from utils.dataframe_manipulation import DataframeManipulation
+from utils.constants import NUM_INSTANCE_FEATURES
 
 class GradientBoostingModel:
 
@@ -21,10 +21,10 @@ class GradientBoostingModel:
             for i in range(num_weak_learners):
                 #as first model, we instantiate the logistic regression model
                 if i == 0:
-                    self._weak_learners.append(LogisticRegressionModel(LinearRegressionModel()))
+                    self._weak_learners.append(LogisticRegressionModel(LinearRegressionModel(NUM_INSTANCE_FEATURES)))
                 #for the other, next to the first one, we instantiate in sequence the other weak learners (lin regression models)
                 else:
-                    self._weak_learners.append(LinearRegressionModel())
+                    self._weak_learners.append(LinearRegressionModel(NUM_INSTANCE_FEATURES))
 
 
 
@@ -63,14 +63,14 @@ class GradientBoostingModel:
             if i == 0:
                 #training the first weak learner (logistic regression model) and producing the residuals value
                 #for the next weak learner
-                LogisticRegressorTraining.fit(self._weak_learners[i], logistic_reg_hyperparameter, batches_num=batches_num, learning_rate=learning_rate, training_dataframe=i_residuals_training_dataframe)
-                i_residuals_training_dataframe = LogisticRegressorTest.create_prediction_residuals_dataframe(self._weak_learners[i], training_dataframe)
+                self._weak_learners[i].fit(logistic_reg_hyperparameter, batches_num=batches_num, learning_rate=learning_rate, training_dataframe=i_residuals_training_dataframe)
+                i_residuals_training_dataframe = DataframeManipulation.create_residuals_df_from_regressor(self._weak_learners[i], training_dataframe)
 
             
             else:
                 #training the weak learner at index i in the weak learners sequence, on the residuals
                 #of the prediction of the previous ensemble
-                LinearRegressorTraining.fit(self._weak_learners[i], linear_reg_hyperparameter, batches_num=batches_num, learning_rate=learning_rate, training_dataframe=i_residuals_training_dataframe)
+                self._weak_learners[i].fit(linear_reg_hyperparameter, batches_num=batches_num, learning_rate=learning_rate, training_dataframe=i_residuals_training_dataframe)
 
                 #saving the list of current trained regressors
                 current_regressors = [self._weak_learners[j] for j in range(i)]
