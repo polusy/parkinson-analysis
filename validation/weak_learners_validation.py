@@ -29,7 +29,7 @@ class HyperparameterRegularizationCrossValidation:
 
         #instatiating a list in which each value will be
         #the log loss of predictions on the validation folder
-        k_folds_log_loss_list = [0 for i in range(n_splits)]
+        k_folds_log_loss_list = []
 
         #we use a list of statistics (mean , stdev) of loss 
         #for each parameter in reg_hyperparam_list
@@ -40,6 +40,10 @@ class HyperparameterRegularizationCrossValidation:
         #do a k-fold on each of them, and then we compare the mean log-loss
         #on the validations set of each cross-validation
         for i in range(len(reg_hyperparam_list)):
+
+            #resetting the values of losses before starting iterating over
+            #k-folders
+            k_folds_log_loss_list = []
 
             #using the 6 split, in each iteration we take the index of the validation folder
             #and the index of the training folders, so we train the logistic regressor on the
@@ -107,8 +111,7 @@ class HyperparameterRegularizationCrossValidation:
 
         #instatiating a list in which each value will be
         #the MSE of a validation folder
-        k_folds_mse_list = [0 for i in range(n_splits)]
-        iteration_counter = 0
+        k_folds_mse_list = []
 
         #we use a list of statistics (mean , stdev) of loss 
         #for each parameter in reg_hyperparam_list
@@ -119,6 +122,10 @@ class HyperparameterRegularizationCrossValidation:
         #do a k-fold on each of them, and then we compare the mean log-loss
         #on the validations set of each cross-validation
         for i in range(len(lin_regressor_reg_hyperparam_list)):
+
+            #resetting the list of mse values over k-folders
+            #at the start of the k-cross-validation
+            k_folds_mse_list = []
 
             #using the 6 split, in each iteration we take the index of the validation folder
             #and the index of the training folders, so we train the logistic regressor on the

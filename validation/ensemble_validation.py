@@ -25,7 +25,7 @@ class BoostingRoundsCrossValidation:
 
         #instatiating a list in which each value will be
         #the log loss of predictions on the validation folder
-        k_folds_log_loss_list = [0 for i in range(n_splits)]
+        k_folds_log_loss_list = []
 
         #we use a list of statistics (mean , stdev) of loss 
         #for each hyperparameter
@@ -33,6 +33,10 @@ class BoostingRoundsCrossValidation:
 
 
         for i in range(len(boosting_rounds_num_list)):
+
+            #resetting the values of losses before starting iterating over
+            #k-folders
+            k_folds_log_loss_list = []
 
             #using the 6 split, in each iteration we take the index of the validation folder
             #and the index of the training folders, so we train the ensemble model on the
