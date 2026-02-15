@@ -5,10 +5,6 @@ import pandas as pd
 
 class LinearRegressionModel :
 
-    #parametrized init
-    def __init__(self, parameters):
-        self._parameters = parameters
-
 
     #non-parametrized init, 
     #init every parameters and bias with zero values
@@ -29,7 +25,11 @@ class LinearRegressionModel :
         for i in range(len(features_instances)):
             prediction += features_instances[i]*self._parameters[i]
 
-        return prediction
+        #adding the bias (parameter indipendent from the features instances)
+        bias = self.get_parameters[len(features_instances)] #we store it at the last index of the parameters list
+        prediction += bias
+
+        return  prediction
     
 
     def fit(self, reg_hyperparameter, batches_num, learning_rate, training_dataframe):
@@ -72,7 +72,7 @@ class LinearRegressionModel :
                 epoch_gradient = [0 for i in range(len(input_features_batches[0].columns) + 1)]
                 
                 #saving the model parameters before starting the training epoch
-                parameters_before_epoch = self._parameters
+                parameters_before_epoch = self._parameters.copy()
 
                 #iterating over input features and target feature batches
                 for input_feature_batch, target_feature_batch in zip(input_features_batches, target_feature_batches):
@@ -135,10 +135,10 @@ class LinearRegressionModel :
                 epoch_gradient = [ddw_sum/batches_num for ddw_sum in epoch_gradient]
 
                 #rescuing the parameters after an epoch
-                parameters_after_epoch = self._parameters
+                parameters_after_epoch = self._parameters.copy()
 
 
-                
+
     
     #defining getters and setters
     def get_bias(self):
@@ -218,7 +218,7 @@ class LogisticRegressionModel :
             epoch_gradient = [0 for i in range(len(input_features_batches[0].columns) + 1)]
             
             #saving the model parameters before starting the training epoch
-            parameters_before_epoch = self._regression_model.get_parameters()
+            parameters_before_epoch = self._regression_model.get_parameters().copy()
 
             #iterating over input features and target feature batches
             for input_feature_batch, target_feature_batch in zip(input_features_batches, target_feature_batches):
@@ -261,7 +261,7 @@ class LogisticRegressionModel :
                 for i in range(len(parameters_before_epoch)):
 
                     #taking the previous value of the parameter
-                    parameter_i = self._regression_model.get_parameter(i)
+                    parameter_i = self._regression_model.get_parameter(i).copy()
 
                     #updating the parameter subtracting from it the loss gradient 
                     self.set_parameter(i, parameter_i - learning_rate*loss_gradient[i])
@@ -273,7 +273,7 @@ class LogisticRegressionModel :
                         L2_reg_term = learning_rate* ((reg_hyperparameter)/current_batch_examples_num)*parameter_i
 
                         #new update for L2 regularization, subtracting from the previously updated parameter the L2 reg. term
-                        updated_parameter_i = self._regression_model.get_parameter(i)
+                        updated_parameter_i = self._regression_model.get_parameter(i).copy()
                         self.set_parameter(i, updated_parameter_i - L2_reg_term)
 
 
@@ -281,7 +281,7 @@ class LogisticRegressionModel :
             epoch_gradient = [ddw_sum/batches_num for ddw_sum in epoch_gradient]
 
             #rescuing the parameters after an epoch
-            parameters_after_epoch = self._regression_model().get_parameters()
+            parameters_after_epoch = self._regression_model().get_parameters().copy()
     
 
 
@@ -312,7 +312,7 @@ class LogisticRegressionModel :
     
 
     def set_parameter(self, param_index, value):
-        self._regression_model.set_parameter[param_index, value]
+        self._regression_model.set_parameter(param_index, value)
     
 
 
