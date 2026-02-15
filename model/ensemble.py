@@ -63,7 +63,7 @@ class GradientBoostingModel:
             if i == 0:
                 #training the first weak learner (logistic regression model) and producing the residuals value
                 #for the next weak learner
-                LogisticRegressorTraining.fit(self._weak_learners[i], logistic_reg_hyperparameter, batches_num=5, learning_rate=0.01, training_dataframe=i_residuals_training_dataframe)
+                LogisticRegressorTraining.fit(self._weak_learners[i], logistic_reg_hyperparameter, batches_num=batches_num, learning_rate=learning_rate, training_dataframe=i_residuals_training_dataframe)
                 i_residuals_training_dataframe = LogisticRegressorTest.create_prediction_residuals_dataframe(self._weak_learners[i], training_dataframe)
 
             
