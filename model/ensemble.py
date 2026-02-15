@@ -54,7 +54,7 @@ class GradientBoostingModel:
 
 
 
-    def training(self, logistic_reg_hyperparameter, linear_reg_hyperparameter, batches_num, learning_rate, training_dataframe):
+    def fit(self, logistic_reg_hyperparameter, linear_reg_hyperparameter, batches_num, learning_rate, training_dataframe):
 
         i_residuals_training_dataframe = training_dataframe
         
