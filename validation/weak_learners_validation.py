@@ -11,6 +11,7 @@ class HyperparameterRegularizationCrossValidation:
     the first weak learner (logistic regressor) and the regularization hyperparameter 
     of the other weak learners (linear regressors)"""
 
+    @staticmethod
     def log_regressor_hyperparam_reg_cross_validate(reg_hyperparam_list, training_dataframe):
 
         #creating the split using the scikit learn grouped k fold
@@ -82,7 +83,7 @@ class HyperparameterRegularizationCrossValidation:
 
 
 
-
+    @staticmethod
     def lin_regressor_hyperparam_reg_cross_validate(log_regressor_reg_hyperparameter, lin_regressor_reg_hyperparam_list, training_dataframe):
 
         """to simplify, regularization hyperparameter of the linear regressor
