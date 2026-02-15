@@ -52,6 +52,9 @@ class DataframeManipulation:
 
             #iterating over the regressor list to accumulate logit prediction from each model
             for i in range(len(regressors)):
+
+                #to get the non-sigmoided prediction, for the first model, we extract the
+                #regression model from the logistic one, and use the logit prediction
                 if i == 0:
                     total_logit_sum += regressors[i].get_regression_model().predict(vectorized_example_features)
                 else:
