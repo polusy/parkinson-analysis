@@ -143,8 +143,8 @@ class HyperparameterRegularizationCrossValidation:
                 #as we predict the value in the training set and the value in the validation set
                 #and store the residuals between predicted value and real target value in these new 
                 #dataframes
-                residuals_training_dataframe = DataframeManipulation.create_prediction_residuals_dataframe(current_log_regressor, current_training_folders)
-                residuals_validation_dataframe = DataframeManipulation.create_prediction_residuals_dataframe(current_log_regressor, current_validation_folder)
+                residuals_training_dataframe = DataframeManipulation.create_residuals_df_from_regressor(current_log_regressor, current_training_folders)
+                residuals_validation_dataframe = DataframeManipulation.create_residuals_df_from_regressor(current_log_regressor, current_validation_folder)
 
 
                 #training a new linear regression model on the residuals training dataframe
