@@ -6,6 +6,7 @@ from statistics import mean,stdev
 
 class BoostingRoundsCrossValidation:
 
+    @staticmethod
     def ensemble_model_boosting_rounds_cross_validate(boosting_rounds_num_list, training_dataframe):
         
         """validate the ensemble model (gradient boosting model), on multiple number of boosting
