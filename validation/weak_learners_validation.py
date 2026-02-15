@@ -28,9 +28,8 @@ class HyperparameterRegularizationCrossValidation:
         groups = training_dataframe['name'].str.rsplit('_', n = 1).str[0]
 
         #instatiating a list in which each value will be
-        #the log loss of a validation folder
+        #the log loss of predictions on the validation folder
         k_folds_log_loss_list = [0 for i in range(n_splits)]
-        iteration_counter = 0
 
         #we use a list of statistics (mean , stdev) of loss 
         #for each parameter in reg_hyperparam_list
@@ -41,8 +40,6 @@ class HyperparameterRegularizationCrossValidation:
         #do a k-fold on each of them, and then we compare the mean log-loss
         #on the validations set of each cross-validation
         for i in range(len(reg_hyperparam_list)):
-
-            iteration_counter = 0
 
             #using the 6 split, in each iteration we take the index of the validation folder
             #and the index of the training folders, so we train the logistic regressor on the
@@ -56,10 +53,9 @@ class HyperparameterRegularizationCrossValidation:
 
                 #training the logistic regressor on the training folders and validate it over the validation folder
                 current_log_regressor.fit(reg_hyperparam_list[i], batches_num=5, learning_rate=0.01, training_dataframe = current_training_folders)
-                k_folds_log_loss_list[iteration_counter] = LogisticRegressorTest.test(current_log_regressor, current_validation_folder)
 
-                #saving number of iteration made
-                iteration_counter += 1
+                #testing the logistic regressor on the validation folder, and rescuing the mean log loss for each validation folder
+                k_folds_log_loss_list.append(LogisticRegressorTest.test(current_log_regressor, current_validation_folder))
 
         
             #computing the mean log loss and the standard deviation between different validations set
@@ -124,8 +120,6 @@ class HyperparameterRegularizationCrossValidation:
         #on the validations set of each cross-validation
         for i in range(len(lin_regressor_reg_hyperparam_list)):
 
-            iteration_counter = 0
-
             #using the 6 split, in each iteration we take the index of the validation folder
             #and the index of the training folders, so we train the logistic regressor on the
             #training folders and we test it on the validation folder
@@ -155,10 +149,8 @@ class HyperparameterRegularizationCrossValidation:
 
                 #storing the specific mean squared error evaluated on prediction on validation folder
                 #in a list[index] correspondent to the specific iteration through the k-folders
-                k_folds_mse_list[iteration_counter] = mean_squared_error
+                k_folds_mse_list.append(mean_squared_error)
 
-                #saving number of iteration made
-                iteration_counter += 1
 
         
             #computing the MSE and the standard deviation between different validations set
