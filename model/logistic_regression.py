@@ -196,7 +196,7 @@ class LogisticRegressionModel :
         #the dimension of the gradient is taken from the number
         #of columns of a random batch in the input_features_batches
         loss_gradient = [100 for i in range(len(input_features_batches[0].columns) + 1)]
-        epoch_gradient = [0 for i in range(len(input_features_batches[0].columns) + 1)]
+        epoch_gradient = [200 for i in range(len(input_features_batches[0].columns) + 1)]
         
 
         #initialiazing the tollerance values
@@ -250,7 +250,7 @@ class LogisticRegressionModel :
                             loss_gradient[i] += example_prediction_loss*vectorized_example_features[i]
 
                 #taking the mean partial derivative of loss with respect to each parameter
-                #to compute partial derivates of mean log loss
+                #to compute partial derivatives of mean log loss
                 for i in range(len(vectorized_example_features) + 1):
                     loss_gradient[i] /= current_batch_examples_num
                     epoch_gradient[i] += loss_gradient[i]
@@ -262,10 +262,10 @@ class LogisticRegressionModel :
                     #taking the previous value of the parameter
                     parameter_i = self._regression_model.get_parameter(i)
 
-                    #updating the parameter subtracting from it the loss gradient 
+                    #updating the parameter by subtracting from it the loss gradient 
                     self.set_parameter(i, parameter_i - learning_rate*loss_gradient[i])
 
-                    #do not udate the bias term with regularization
+                    #do not update the bias term with regularization
                     if i != len(parameters_after_epoch) - 1:
                         
                         #computing the L2 regularization term
