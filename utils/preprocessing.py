@@ -96,7 +96,7 @@ class DataNormalizer:
         #and store the new csv file in the data folder
         filepath = Path(path)
         filepath.parent.mkdir(parents=True, exist_ok=True)
-        dataframe.to_csv(filepath)
+        dataframe.to_csv(filepath, index=False)
 
 
 
