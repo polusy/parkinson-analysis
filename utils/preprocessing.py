@@ -136,8 +136,8 @@ class DataSplitter:
 
 
         #converting the new exctracted dataframes to different csv file in data folder
-        DataNormalizer.convert_dataframe_to_csv(training_dataframe, "data/raw_parkinsons_training.data")
-        DataNormalizer.convert_dataframe_to_csv(test_dataframe, "data/raw_parkinsons_test.data")
+        DataNormalizer.convert_dataframe_to_csv(training_dataframe, "data/raw/raw_parkinsons_training.data")
+        DataNormalizer.convert_dataframe_to_csv(test_dataframe, "data/raw/raw_parkinsons_test.data")
 
 
 
