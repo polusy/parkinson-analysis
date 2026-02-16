@@ -57,8 +57,9 @@ class BoostingRoundsCrossValidation:
                                     LEARNING_RATE, training_dataframe=current_training_folders)
                 
                 #testing the ensemble on the validation folder, 
-                #storing the stats at index correspondent to 
-                #inedx of the the relative hyperparameter in hyperparam_list
+                #storing the mean log loss (derived from test on validation folder) 
+                # at index correspondent to the index
+                # of the the relative hyperparameter in hyperparam_list
                 k_folds_log_loss_list.append(current_ensemble.test(test_dataframe=current_validation_folder))
 
 
