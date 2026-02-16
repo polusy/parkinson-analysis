@@ -1,10 +1,7 @@
 /*KB FACTS*/
 
-/*symptoms associated with parkinson, kb facts*/
-symptom_of(vocal_tremor, parkinson).
-symptom_of(breathy_voice, parkinson).
-symptom_of(hoarse_voice, parkinson).
-
+/*symptom associated with parkinson*/
+symptom_of(dysphonia, parkinson).
 
 
 /*conditions on features that imply specific symptoms*/
@@ -14,10 +11,22 @@ indicates(high_shimmer, vocal_tremor).
 indicates(high_nhr, breathy_voice).
 indicates(low_hnr, hoarse_voice).
 
+
 /*weighting different symptoms with different weights as facts*/
 symptom_weight(vocal_tremor, 3).
 symptom_weight(hoarse_voice, 2).
 symptom_weight(breathy_voice, 2).
+
+
+/*hierarchy of symptoms types*/
+is_subtype_of(vocal_tremor, vocal_instability).
+is_subtype_of(breathy_voice, dysphonia)
+is_subtype_of(vocal_instability, dysphonia).
+is_subtype_of(hoarse_voice, dysphonia).
+
+
+
+
 
 
 
@@ -38,16 +47,22 @@ has_feature(Patient, low_hnr) :- hnr_value(Patient, Value), Value < 20
 /*general symptom inference*/
 has_symptom(Patient, Symptom) :- has_feature(Patient, Feature), indicates(Feature, Symptom)
 
+/*ground case*/
+has_symptom_or_super(Patient, Higher_Symptom) :- has_symptom(Patient, Higher_Symptom)
+
+/*inference of general type of symptom given a sub type*/
+has_symptom_or_super(Patient, Higher_Symptom) :- has_symptom_or_super(Patient, Intermediate_Symptom), is_subtype_of(Intermediate_Symptom, Higher_Symptom)
+
 
 /*rules to count patient symptoms for parkinson disease*/
-count_symptoms(Patient, Disease, Count) :- findall(Symptom, (has_symptom(Patient, Symptom),
-                                            symptom_of(Symptom,Disease)),  Symptoms), 
-                                            list_to_set(Symptoms, UniqueSymptoms), 
-                                            length(UniqueSymptoms, Count)
+count_ground_symptoms(Patient, Disease, Count) :- findall(Symptom, (has_symptom(Patient, Symptom), has_symptom_or_super(Patient, SuperSymptom),
+                                                symptom_of(SuperSymptom,Disease)), Symptoms), 
+                                                list_to_set(Symptoms, UniqueSymptoms), 
+                                                length(UniqueSymptoms, Count)
 
 
 /*weighted score of disease diagnosis severity*/
-weighted_diagnosis(Patient, Disease, Score) :-  findall(Symptom, (has_symptom(Patient, Symptom), symptom_of(Symptom, Disease)), Symptoms),
+weighted_diagnosis(Patient, Disease, Score) :-  findall(Symptom, (has_symptom(Patient, Symptom), has_symptom_or_super(Patient, SuperSymptom), symptom_of(SuperSymptom, Disease)), Symptoms),
                                                 list_to_set(Symptoms,UniqueSymptoms),
                                                 findall(Weight, (member(Symptom, UniqueSymptoms), symptom_weight(Symptom, Weight)), Weight_List),
                                                 sum_list(Weight_List, Score)
@@ -56,8 +71,8 @@ weighted_diagnosis(Patient, Disease, Score) :-  findall(Symptom, (has_symptom(Pa
 
 /*severity diagnosis by symptoms weighted count*/
 diagnosis(Patient, Disease, severe) :- weighted_diagnosis(Patient, Disease, Score), Score >= 5, 
-diagnosis(Patient, Disease, moderate) :- weighted_diagnosis(Patient, Disease, Score), Score >= 3, \+ Score >= 5
-diagnosis(Patient, Disease, mild) :- weighted_diagnosis(Patient, Disease, Score), Score >= 1, \+ Score >= 3
+diagnosis(Patient, Disease, moderate) :- weighted_diagnosis(Patient, Disease, Score), Score >= 3, Score < 5
+diagnosis(Patient, Disease, mild) :- weighted_diagnosis(Patient, Disease, Score), Score >= 1, Score < 3
 diagnosis(Patient, Disease, none) :- weighted_diagnosis(Patient, Disease, Score), Score = 0
 
 
@@ -85,6 +100,21 @@ validation(Patient, Prediction, Disease, Result) :- ( (critical_false_negative(P
                                         coherent_prediction(Patient, Prediction, Disease) -> Result = coherent;
                                         Result = warning
                                         )    
+
+
+
+
+/*Explaining KB inference, showing weight assigned to each symptom*/
+explain(Patient, Prediction, Disease, Evidence) :- findall(Symptom-Weight, (has_symptom(Patient, Symptom), has_symptom_or_super(Patient, SuperSymptom), symptom_of(SuperSymptom, Disease), symptom_weight(Symptom, Weight)), Evidence)
+
+
+
+/*Diagnostic report*/
+report(Patient, Prediction, Disease, Evidence, Result, Message) :- validation(Patient, Prediction, Disease, Result),
+                                                                explain(Patient, Prediction, Disease, Evidence),
+                                                                format(atom(Message), "Stato: ~w. Evidenze : ~w. Predizione : ~w.", [Result, Evidence, Prediction])
+
+
 
 
 
