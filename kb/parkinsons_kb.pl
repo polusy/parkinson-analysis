@@ -98,6 +98,10 @@ inconsistencies_warning(Patient, Disease) :- has_feature(Patient, high_jitter),
                                             \+ has_feature(Patient, high_nhr).
 
 
+
+
+
+
 /*Integrating all the rules in one validator*/
 validation(Patient, Prediction, Disease, Result) :- ( (critical_false_negative(Patient, Prediction, Disease); critical_false_positive(Patient, Prediction, Disease)) -> Result = critical_error;
                                         inconsistencies_warning(Patient, Disease) -> Result = conflictual_data;
@@ -107,16 +111,20 @@ validation(Patient, Prediction, Disease, Result) :- ( (critical_false_negative(P
 
 
 
-
-/*Explaining KB inference, showing weight assigned to each symptom and*/
+/*Explaining KB inference, showing weight assigned to each symptom*/
 explain(Patient, Prediction, Disease, Evidence) :- findall(Symptom-Weight, (has_symptom(Patient, Symptom), symptom_related_to_disease(Symptom, Disease), symptom_weight(Symptom, Weight)), Evidence).
 
-
+/*using a List to store each symptom, super symptom relation*/
+inference_chain(Patient, Prediction, Disease, Chain) :- findall(Symptom-SuperSymptom, (has_symptom(Patient, Symptom), is_subtype_of(Symptom, SuperSymptom), symptom_related_to_disease(Symptom, Disease)), Chain).
 
 /*Diagnostic report*/
 report(Patient, Prediction, Disease, Evidence, Result, Message) :- validation(Patient, Prediction, Disease, Result),
                                                                 explain(Patient, Prediction, Disease, Evidence),
                                                                 format(atom(Message), "Stato: ~w. Evidenze : ~w. Predizione : ~w.", [Result, Evidence, Prediction]).
+
+
+
+
 
 
 
