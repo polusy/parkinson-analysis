@@ -36,13 +36,13 @@ for (norm_index, normalized_row), (non_norm_index,non_normalized_row) in zip(nor
         #rescue the result on the validation query on the kb
         result = kb_interface.query_result_kb(non_normalized_row, discrete_pred, result_only=True)
 
-        if 'warning' in result: 
+        if 'warning' in str(result): 
             warning_count += 1
-        elif 'conflictual_data' in result:
+        elif 'conflictual_data' in str(result):
             conflictual_data_count += 1
-        elif 'critical_error' in result:
+        elif 'critical_error' in str(result):
              critical_error_count += 1
-        elif 'coherent' in result:
+        elif 'coherent' in str(result):
              coherent_count += 1
 
 
