@@ -1,6 +1,7 @@
 from numpy import linalg,subtract
 import numpy as np
 import pandas as pd
+from utils.constants import NUM_INSTANCE_FEATURES
 
 
 class LinearRegressionModel :
@@ -50,8 +51,8 @@ class LinearRegressionModel :
             #initializing the loss gradient and the gradient tollerance value
             #the dimension of the gradient is taken from the number
             #of columns of a random batch in the input_features_batches
-            loss_gradient = [100 for i in range(len(input_features_batches[0].columns) + 1)]
-            epoch_gradient = [0 for i in range(len(input_features_batches[0].columns) + 1)]
+            loss_gradient = [100 for i in range(NUM_INSTANCE_FEATURES + 1)]
+            epoch_gradient = [200 for i in range(NUM_INSTANCE_FEATURES + 1)]
             
 
             #initialiazing the tollerance values
@@ -189,16 +190,16 @@ class LogisticRegressionModel :
         index_splits = np.array_split(training_dataframe.index.to_numpy(), batches_num) #list of arrays of indexes, each array denotes the list of specific indexes of a batch
         batches = [training_dataframe.loc[idx_list] for idx_list in index_splits] #using each array of indexes to store a btach in the list of batches
 
-
-        #splitting the batches in input features batches and target feature batches
-        input_features_batches = [batch.drop(['name', 'status'], axis = 1) for batch in batches]
-        target_feature_batches = [batch['status'] for batch in batches]
+        if 'name' in training_dataframe.columns and 'status' in training_dataframe.columns:
+            #splitting the batches in input features batches and target feature batches
+            input_features_batches = [batch.drop(['name', 'status'], axis = 1) for batch in batches]
+            target_feature_batches = [batch['status'] for batch in batches]
 
         #initializing the loss gradient and the gradient tollerance value
         #the dimension of the gradient is taken from the number
         #of columns of a random batch in the input_features_batches
-        loss_gradient = [100 for i in range(len(input_features_batches[0].columns) + 1)]
-        epoch_gradient = [200 for i in range(len(input_features_batches[0].columns) + 1)]
+        loss_gradient = [100 for i in range(NUM_INSTANCE_FEATURES+ 1)]
+        epoch_gradient = [200 for i in range(NUM_INSTANCE_FEATURES + 1)]
         
 
         #initialiazing the tollerance values
