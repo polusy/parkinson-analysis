@@ -4,7 +4,7 @@ NUM_INSTANCE_FEATURES = 22
 
 
 #regularization hyperparameters, found after cross-validation
-LOGISTIC_REG_HYPERPARAMETER = 0
+LOGISTIC_REG_HYPERPARAMETER = 10
 LINEAR_REG_HYPERPARAMETER = 0
 
 #learning rate hyperparameter (fixed, not found with cross-validation)

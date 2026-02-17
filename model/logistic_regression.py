@@ -37,14 +37,15 @@ class LinearRegressionModel :
             given a regularization hyperparameter, the number of batches to be trained on
             and the learning rate of the gradient descent"""
 
-            #creating batches of samples (mini-dataframes), given a requested number of batches
-            #dont care about same patient samples distributed over different batches
-            batches = np.array_split(training_dataframe, batches_num)
+            #creating batches of samples (mini dataframe), given a requested number of batches
+            #dont care about same patient samples distributed over different batches 
+            index_splits = np.array_split(training_dataframe.index.to_numpy(), batches_num) #list of arrays of indexes, each array denotes the list of specific indexes of a batch
+            batches = [training_dataframe.loc[idx_list] for idx_list in index_splits] #using each array of indexes to store a btach in the list of batches
 
-
-            #splitting the batches in input features batches and target feature batches
-            input_features_batches = [batches[i].drop(['name', 'status']) for i in range(len(batches))]
-            target_feature_batches = [batches[i]['status'] for i in range(len(batches))]
+            if 'name' in training_dataframe.columns and 'status' in training_dataframe.columns:
+                #splitting the batches in input features batches and target feature batches
+                input_features_batches = [batch.drop(['name', 'status'], axis = 1) for batch in batches]
+                target_feature_batches = [batch['status'] for batch in batches]
 
             #initializing the loss gradient and the gradient tollerance value
             #the dimension of the gradient is taken from the number
@@ -190,7 +191,7 @@ class LogisticRegressionModel :
 
 
         #splitting the batches in input features batches and target feature batches
-        input_features_batches = [batch.drop(['name', 'status'], axis = 1, errors='ignore') for batch in batches]
+        input_features_batches = [batch.drop(['name', 'status'], axis = 1) for batch in batches]
         target_feature_batches = [batch['status'] for batch in batches]
 
         #initializing the loss gradient and the gradient tollerance value
