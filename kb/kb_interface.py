@@ -1,7 +1,4 @@
 from pyswip import Prolog
-from model.ensemble import GradientBoostingModel
-from utils.constants import NUM_BOOSTING_ROUNDS, LOGISTIC_REG_HYPERPARAMETER, LINEAR_REG_HYPERPARAMETER, BATCHES_NUM, LEARNING_RATE
-import pandas as pd
 
 class KBInterface:
 
@@ -16,14 +13,13 @@ class KBInterface:
     def query_result_kb(self, non_normalized_dataframe_row, model_prediction, result_only):
         
         selected_features_row = self.select_features_from_dataframe_row(non_normalized_dataframe_row)
-        prediction_augmented_row = self.add_prediction_to_selected_features(selected_features_row, model_prediction)
 
         #take the selected features from the dataframe row and instante temporarily
         #in the knowledge base as facts
-        self._kb.assertz(f"jitter_value(patient, {prediction_augmented_row['Jitter:DDP']})")
-        self._kb.assertz(f"shimmer_value(patient, {prediction_augmented_row['Shimmer:APQ3']})")
-        self._kb.assertz(f"hnr_value(patient, {prediction_augmented_row['HNR']})")
-        self._kb.assertz(f"nhr_value(patient, {prediction_augmented_row['NHR']})")
+        self._kb.assertz(f"jitter_value(patient, {selected_features_row['Jitter:DDP']})")
+        self._kb.assertz(f"shimmer_value(patient, {selected_features_row['Shimmer:APQ3']})")
+        self._kb.assertz(f"hnr_value(patient, {selected_features_row['HNR']})")
+        self._kb.assertz(f"nhr_value(patient, {selected_features_row['NHR']})")
 
         if result_only:
 
@@ -31,7 +27,7 @@ class KBInterface:
             results = list(self._kb.query(f"validation(patient, {model_prediction}, parkinson, Result)"))
 
             #retract previous assertions from the kb 
-            self.retract_assertz_from_kb(prediction_augmented_row)
+            self.retract_assertz_from_kb(selected_features_row)
 
             #rescuing the value stored in the Result variable
             return results[0]['Result']
