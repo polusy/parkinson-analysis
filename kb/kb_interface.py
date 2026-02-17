@@ -16,10 +16,11 @@ class KBInterface:
 
         #take the selected features from the dataframe row and instante temporarily
         #in the knowledge base as facts
-        self._kb.assertz(f"jitter_value(patient, {selected_features_row['Jitter:DDP']})")
-        self._kb.assertz(f"shimmer_value(patient, {selected_features_row['Shimmer:APQ3']})")
-        self._kb.assertz(f"hnr_value(patient, {selected_features_row['HNR']})")
-        self._kb.assertz(f"nhr_value(patient, {selected_features_row['NHR']})")
+        self._kb.assertz(f"jitter_value(patient, {float(selected_features_row['Jitter:DDP']):.8f})")
+        self._kb.assertz(f"shimmer_value(patient, {float(selected_features_row['Shimmer:APQ3']):.8f})")
+        self._kb.assertz(f"hnr_value(patient, {float(selected_features_row['HNR']):.8f})")
+        self._kb.assertz(f"nhr_value(patient, {float(selected_features_row['NHR']):.8f})")
+
 
         if result_only:
 

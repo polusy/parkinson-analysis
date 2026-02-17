@@ -20,16 +20,10 @@ symptom_weight(breathy_voice, 2).
 
 /*hierarchy of symptoms types*/
 is_subtype_of(vocal_tremor, vocal_instability).
+is_subtype_of(vocal_tremor, dysphonia).
 is_subtype_of(breathy_voice, dysphonia).
 is_subtype_of(vocal_instability, dysphonia).
 is_subtype_of(hoarse_voice, dysphonia).
-
-/*general subtype inference, ascending hierarchy of symptoms*/
-is_subtype_of(BaseSymptom, SuperSymptom) :- is_subtype_of(BaseSymptom, IntermediateSymptom), is_subtype_of(IntermediateSymptom, SuperSymptom).
-
-
-
-
 
 
 
@@ -41,10 +35,10 @@ jitter_value(marco, 1.50) for example, and then we will infer has_feature(marco,
 
 
 /*rules on input features values that imply its position in the scale (high,low)*/
-has_feature(Patient, high_jitter) :- jitter_value(Patient, Value), Value >  1.04.
-has_feature(Patient, high_shimmer) :- shimmer_value(Patient, Value), Value > 0.068.
-has_feature(Patient, high_nhr) :- nhr_value(Patient, Value), Value > 0.19.
-has_feature(Patient, low_hnr) :- hnr_value(Patient, Value), Value < 20.
+has_feature(Patient, high_jitter) :- jitter_value(Patient, Value), Value >  0.0057.
+has_feature(Patient, high_shimmer) :- shimmer_value(Patient, Value), Value > 0.030.
+has_feature(Patient, high_nhr) :- nhr_value(Patient, Value), Value > 0.015.
+has_feature(Patient, low_hnr) :- hnr_value(Patient, Value), Value < 20.0.
 
 
 /*general symptom inference*/

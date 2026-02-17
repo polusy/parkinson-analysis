@@ -18,7 +18,7 @@ kb_interface = KBInterface("kb/parkinsons_kb.pl")
 
 
 normalized_test_dataframe = DataNormalizer.drop_dataframe_columns(pd.read_csv("data/normalized/normalized_parkinsons_test.data"), ['name', 'status'])
-non_normalized_test_dataframe = DataNormalizer.drop_dataframe_columns(pd.read_csv("data/raw/raw_parkinsons_test.data"), ['name', 'status'])
+non_normalized_test_dataframe = pd.read_csv("data/raw/raw_parkinsons_test.data")
 
 
 warning_count = 0
@@ -46,6 +46,8 @@ for (norm_index, normalized_row), (non_norm_index,non_normalized_row) in zip(nor
              critical_error_count += 1
         elif 'coherent' in str(result):
              coherent_count += 1
+
+        print("Predizione : ", discrete_pred,  result, "Status reale : ", non_normalized_row['status'])
 
 
 
