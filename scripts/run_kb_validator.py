@@ -2,6 +2,7 @@ from kb.kb_interface import KBInterface
 from model.ensemble import GradientBoostingModel
 from utils.constants import NUM_BOOSTING_ROUNDS, LOGISTIC_REG_HYPERPARAMETER, LINEAR_REG_HYPERPARAMETER, BATCHES_NUM, LEARNING_RATE
 from model.regressors import LogisticRegressionModel
+from utils.preprocessing import DataNormalizer
 import pandas as pd
 import numpy as np
 
@@ -15,8 +16,9 @@ ensemble_model.fit(LOGISTIC_REG_HYPERPARAMETER, LINEAR_REG_HYPERPARAMETER, BATCH
 kb_interface = KBInterface("kb/parkinsons_kb.pl")
 
 
-normalized_test_dataframe = pd.read_csv("data/normalized/normalized_parkinsons_test.data")
-non_normalized_test_dataframe = pd.read_csv("data/raw/raw_parkinsons_test.data")
+
+normalized_test_dataframe = DataNormalizer.drop_dataframe_columns(pd.read_csv("data/normalized/normalized_parkinsons_test.data"), ['name', 'status'])
+non_normalized_test_dataframe = DataNormalizer.drop_dataframe_columns(pd.read_csv("data/raw/raw_parkinsons_test.data"), ['name', 'status'])
 
 
 warning_count = 0
