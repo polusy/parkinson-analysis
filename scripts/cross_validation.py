@@ -17,7 +17,6 @@ print("cross-validation on logistic regressor regularization hyperparameter")
 print(reg_hyperparameter_stats)
 
 
-
 #finding the regularization hyperparameter that reduces mean squared and std. dev. of error using 
 #k-folds cross validation approach
 reg_hyperparameter_stats = HyperparameterRegularizationCrossValidation.lin_regressor_hyperparam_reg_cross_validate(LOGISTIC_REG_HYPERPARAMETER, reg_hyperparameter_list, training_dataframe=pd.read_csv("data/normalized/normalized_parkinsons_training.data"))
