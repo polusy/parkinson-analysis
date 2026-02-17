@@ -93,7 +93,7 @@ critical_false_positive(Patient, Prediction, Disease) :- diagnosis(Patient, Dise
 
 
 /*conflictual features findings*/
-inconsistencies_warning(Patient, Disease) :- has_feature(Patient, high_jitter),
+inconsistencies_warning(Patient) :- has_feature(Patient, high_jitter),
                                             \+ has_feature(Patient, high_shimmer),
                                             \+ has_feature(Patient, high_nhr).
 
@@ -104,10 +104,10 @@ inconsistencies_warning(Patient, Disease) :- has_feature(Patient, high_jitter),
 
 /*Integrating all the rules in one validator*/
 validation(Patient, Prediction, Disease, Result) :- ( (critical_false_negative(Patient, Prediction, Disease); critical_false_positive(Patient, Prediction, Disease)) -> Result = critical_error;
-                                        inconsistencies_warning(Patient, Disease) -> Result = conflictual_data;
+                                        inconsistencies_warning(Patient) -> Result = conflictual_data;
                                         coherent_prediction(Patient, Prediction, Disease) -> Result = coherent;
-                                        Result = warning.
-                                        )    
+                                        Result = warning
+                                        ).
 
 
 
