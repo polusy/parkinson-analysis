@@ -27,7 +27,7 @@ total_count = len(normalized_test_dataframe)
 
 
 
-for (norm_index, normalized_row), (non_norm_index,non_normalized_row) in normalized_test_dataframe.iterrows(), non_normalized_test_dataframe.iterrows():
+for (norm_index, normalized_row), (non_norm_index,non_normalized_row) in zip(normalized_test_dataframe.iterrows(), non_normalized_test_dataframe.iterrows()):
         
         #classify the patient, given the normalized row of his vocal values
         continuous_pred = ensemble_model.predict(normalized_row.to_numpy())
