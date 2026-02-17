@@ -4,6 +4,7 @@ from utils.dataframe_manipulation import DataframeManipulation
 from utils.constants import NUM_INSTANCE_FEATURES
 from utils.preprocessing import DataSplitter
 import numpy as np
+from statistics import mean, stdev
 
 
 class GradientBoostingModel:
@@ -93,7 +94,7 @@ class GradientBoostingModel:
         input_features_dataframe, target_feature_dataframe = DataSplitter.split_targets_from_input(test_dataframe)
 
 
-        prediction_cumulative_log_loss = 0
+        prediction_log_loss_list = [0]*len(test_dataframe)
 
         #iterating over the examples in the test dataframe
         for (example_index,example_features), (target_index,example_target) in zip(input_features_dataframe.iterrows(), target_feature_dataframe.items()):
@@ -103,15 +104,16 @@ class GradientBoostingModel:
             #computing the ensemble model prediction and the log loss between
             #the target prediction and the target real value, cumulatin it in a variable
             target_prediction = self.predict(vectorized_example_features)
-            prediction_cumulative_log_loss += (example_target)*(-np.log(target_prediction)) + (1 - example_target)*(-np.log(1 - target_prediction))
+            prediction_log_loss_list.append((example_target)*(-np.log(target_prediction)) + (1 - example_target)*(-np.log(1 - target_prediction)))
 
 
         #to compute the mean log loss, take the cumulative log loss and divide it 
         #by the number of rows in the test_dataframe
-        mean_log_loss = prediction_cumulative_log_loss/len(test_dataframe)
+        mean_log_loss = mean(prediction_log_loss_list)
+        std_dev_log_loss = stdev(prediction_log_loss_list)
 
 
-        return mean_log_loss
+        return mean_log_loss, std_dev_log_loss
                 
 
 
