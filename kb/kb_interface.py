@@ -20,15 +20,18 @@ class KBInterface:
 
         #take the selected features from the dataframe row and instante temporarily
         #in the knowledge base as facts
-        self._kb.assertz("jitter_value(patient, %p)", prediction_augmented_row['Jitter:DDP'])
-        self._kb.assertz("shimmer_value(patient, %p)", prediction_augmented_row['Shimmer:APQ3'])
-        self._kb.assertz("hnr_value(patient, %p)", prediction_augmented_row['HNR'])
-        self._kb.assertz("nhr_value(patient, %p)", prediction_augmented_row['NHR'])
+        self._kb.assertz(f"jitter_value(patient, {prediction_augmented_row['Jitter:DDP']})")
+        self._kb.assertz(f"shimmer_value(patient, {prediction_augmented_row['Shimmer:APQ3']})")
+        self._kb.assertz(f"hnr_value(patient, {prediction_augmented_row['HNR']})")
+        self._kb.assertz(f"nhr_value(patient, {prediction_augmented_row['NHR']})")
 
         if result_only:
 
             #query the kb with the same patient previously instantiated as facts with his specific vocal features value
-            results = list(self._kb.query("validation(patient, %p, parkinson, Result)", model_prediction))
+            results = list(self._kb.query(f"validation(patient, {model_prediction}, parkinson, Result)"))
+
+            #retract previous assertions from the kb 
+            self.retract_assertz_from_kb(prediction_augmented_row)
 
             #rescuing the value stored in the Result variable
             return results[0]['Result']
@@ -36,25 +39,38 @@ class KBInterface:
         else:
             #query the complete inference chain from the basic symptoms to other abstracts features
             #and produce a report message with the result, evidence (weighted diagnosys)
-            inference_chain = list(self._kb.query("inference_chain(patient, %p, parkinson, Chain)", model_prediction))
-            report = list(self._kb.query("report(patient, %p, parkinson, Evidence, Result, Message)", model_prediction))
+            inference_chain = list(self._kb.query(f"inference_chain(patient, {model_prediction}, parkinson, Chain)"))
+            report = list(self._kb.query(f"report(patient, {model_prediction}, parkinson, Evidence, Result, Message)"))
+
+            #retract previous assertions from the kb 
+            self.retract_assertz_from_kb(prediction_augmented_row)
             
             return inference_chain, report
+        
+
+
+    def retract_assertz_from_kb(self, prediction_augmented_row):
+        self._kb.retract(f"jitter_value(patient, {prediction_augmented_row['Jitter:DDP']})")
+        self._kb.retract(f"shimmer_value(patient, {prediction_augmented_row['Shimmer:APQ3']})")
+        self._kb.retract(f"hnr_value(patient, {prediction_augmented_row['HNR']})")
+        self._kb.retract(f"nhr_value(patient, {prediction_augmented_row['NHR']})")
+
+
 
 
 
     
-    def select_features_from_dataframe_row(non_normalized_dataframe_row):
+    def select_features_from_dataframe_row(self, non_normalized_dataframe_row):
 
         """choose from the non-normalized dataframe, a specific row
         and then transform it in a dataframe row of specific extracted features"""
 
-        selected_features_row = non_normalized_dataframe_row['Shimmer:APQ3', 'Jitter:DDP', 'NHR', 'HNR']
+        selected_features_row = non_normalized_dataframe_row[['Shimmer:APQ3', 'Jitter:DDP', 'NHR', 'HNR']]
         return selected_features_row
     
 
     
-    def add_prediction_to_selected_features(selected_features_row, prediction):
+    def add_prediction_to_selected_features(self, selected_features_row, prediction):
         """add the value prediction to a dataframe row"""
 
         selected_features_row['Prediction'] = prediction
