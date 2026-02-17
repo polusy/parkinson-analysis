@@ -1,5 +1,5 @@
 
-from logistic_regression import LogisticRegressionModel,LinearRegressionModel
+from model.logistic_regression import LogisticRegressionModel,LinearRegressionModel
 from utils.dataframe_manipulation import DataframeManipulation
 from utils.constants import NUM_INSTANCE_FEATURES
 from utils.preprocessing import DataSplitter

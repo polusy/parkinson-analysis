@@ -1,4 +1,4 @@
-from preprocessing import DataSplitter
+from utils.preprocessing import DataSplitter
 import pandas as pd
 from model.logistic_regression import LogisticRegressionModel
 
