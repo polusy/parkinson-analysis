@@ -11,10 +11,10 @@ reg_hyperparameter_list = [0.001, 0.1, 1.0, 10.0]
 
 #finding the regularization hyperparameter that reduces mean and std. dev log loss. using 
 #k-folds cross validation approach
-#reg_hyperparameter_stats = HyperparameterRegularizationCrossValidation.log_regressor_hyperparam_reg_cross_validate(reg_hyperparam_list=reg_hyperparameter_list, training_dataframe=pd.read_csv("data/normalized/normalized_parkinsons_training.data"))
+reg_hyperparameter_stats = HyperparameterRegularizationCrossValidation.log_regressor_hyperparam_reg_cross_validate(reg_hyperparam_list=reg_hyperparameter_list, training_dataframe=pd.read_csv("data/normalized/normalized_parkinsons_training.data"))
 
-#print("cross-validation on logistic regressor regularization hyperparameter")
-#print(reg_hyperparameter_stats)
+print("cross-validation on logistic regressor regularization hyperparameter")
+print(reg_hyperparameter_stats)
 
 
 
