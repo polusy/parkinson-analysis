@@ -47,6 +47,10 @@ class LinearRegressionModel :
                 #splitting the batches in input features batches and target feature batches
                 input_features_batches = [batch.drop(['name', 'status'], axis = 1) for batch in batches]
                 target_feature_batches = [batch['status'] for batch in batches]
+            else:
+                #splitting the batches in input features batches and target feature batches
+                input_features_batches = [batch.drop(columns=['status']) for batch in batches]
+                target_feature_batches = [batch['status'] for batch in batches]
 
             #initializing the loss gradient and the gradient tollerance value
             #the dimension of the gradient is taken from the number
@@ -70,7 +74,7 @@ class LinearRegressionModel :
             while (linalg.norm(np.array(epoch_gradient)) > gradient_norm_tol) and linalg.norm(subtract(parameters_after_epoch, parameters_before_epoch)) > parameters_subtraction_norm_tol :
 
                 #resetting epoch_gradient at the start
-                epoch_gradient = [0 for i in range(len(input_features_batches[0].columns) + 1)]
+                epoch_gradient = [0 for i in range(NUM_INSTANCE_FEATURES + 1)]
                 
                 #saving the model parameters before starting the training epoch
                 parameters_before_epoch = self._parameters.copy()

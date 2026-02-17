@@ -193,7 +193,12 @@ class DataSplitter:
         if 'name' in integral_dataframe.columns and 'status' in integral_dataframe.columns:
             #splitting the integral dataframe in input features  dataframe and target features dataframe
             input_features_dataframe = integral_dataframe.drop(['name', 'status'], axis=1)
-            target_feature_dataframe = integral_dataframe['status'] 
+            target_feature_dataframe = integral_dataframe['status']
+        else:
+            #splitting the integral dataframe in input features  dataframe and target features dataframe
+            input_features_dataframe = integral_dataframe.drop(columns=['status'])
+            target_feature_dataframe = integral_dataframe['status']
+
 
         return input_features_dataframe,target_feature_dataframe
 
