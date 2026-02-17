@@ -14,6 +14,10 @@ class DataframeManipulation:
         #test set of examples
         input_features_dataframe, target_feature_dataframe = DataSplitter.split_targets_from_input(dataframe)
 
+        #to compute the residuals to store in the target column, we need to force the status column to float, as the dataframe
+        #first recognizes it as an int.
+        target_feature_dataframe = target_feature_dataframe.astype(float).copy()
+
         #iterating over the examples in the test dataframe
         for (example_index,example_features), (target_index,example_target) in zip(input_features_dataframe.iterrows(), target_feature_dataframe.items()):
 
