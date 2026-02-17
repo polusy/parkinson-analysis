@@ -299,6 +299,7 @@ class LogisticRegressionModel :
     
 
     #discretizing the continuous prediction
+    @staticmethod
     def binary_classify(self, features_instances):
         
         #using the prediction function of
