@@ -1,6 +1,6 @@
 
-from model.logistic_regression import LogisticRegressionModel,LinearRegressionModel
-from utils.dataframe_manipulation import DataframeManipulation
+from model.regressors import LogisticRegressionModel,LinearRegressionModel
+from utils.dataframe_utils import DataframeManipulation
 from utils.constants import NUM_INSTANCE_FEATURES
 from utils.preprocessing import DataSplitter
 import numpy as np

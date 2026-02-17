@@ -1,6 +1,5 @@
 from numpy import linalg,subtract
 import numpy as np
-import pandas as pd
 from utils.constants import NUM_INSTANCE_FEATURES
 
 

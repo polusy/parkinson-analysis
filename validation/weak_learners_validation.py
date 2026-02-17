@@ -1,8 +1,8 @@
 from sklearn.model_selection import GroupKFold
 from utils.constants import NUM_INSTANCE_FEATURES
-from model.logistic_regression import LogisticRegressionModel, LinearRegressionModel
+from model.regressors import LogisticRegressionModel, LinearRegressionModel
 from test import LogisticRegressorTest,LinearRegressorTest
-from utils.dataframe_manipulation import DataframeManipulation
+from utils.dataframe_utils import DataframeManipulation
 from statistics import mean,stdev
 
 
