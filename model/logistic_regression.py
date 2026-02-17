@@ -190,7 +190,7 @@ class LogisticRegressionModel :
 
 
         #splitting the batches in input features batches and target feature batches
-        input_features_batches = [batch.drop(['name', 'status']) for batch in batches]
+        input_features_batches = [batch.drop(['name', 'status'], axis = 1, errors='ignore') for batch in batches]
         target_feature_batches = [batch['status'] for batch in batches]
 
         #initializing the loss gradient and the gradient tollerance value
