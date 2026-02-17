@@ -39,7 +39,7 @@ class KBInterface:
             report = list(self._kb.query(f"report(patient, {model_prediction}, parkinson, Evidence, Result, Message)"))
 
             #retract previous assertions from the kb 
-            self.retract_assertz_from_kb(prediction_augmented_row)
+            self.retract_assertz_from_kb(selected_features_row)
             
             return inference_chain, report
         
