@@ -300,7 +300,7 @@ class LogisticRegressionModel :
 
     #discretizing the continuous prediction
     @staticmethod
-    def binary_classify(self, continuous_pred):
+    def binary_classify(continuous_pred):
         
         #creating the threshold
         if(continuous_pred < 0.5):
