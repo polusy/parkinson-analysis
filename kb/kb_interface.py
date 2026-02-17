@@ -67,14 +67,6 @@ class KBInterface:
 
         selected_features_row = non_normalized_dataframe_row[['Shimmer:APQ3', 'Jitter:DDP', 'NHR', 'HNR']]
         return selected_features_row
-    
-
-    
-    def add_prediction_to_selected_features(self, selected_features_row, prediction):
-        """add the value prediction to a dataframe row"""
-
-        selected_features_row['Prediction'] = prediction
-        return selected_features_row
 
 
 
