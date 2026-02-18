@@ -1,12 +1,13 @@
 import pandas as pd
 from pathlib import Path
 from sklearn.model_selection import GroupShuffleSplit
+from sklearn.utils import resample
 
 
 class DataNormalizer:
 
     @staticmethod
-    def normalize_data(csv_raw_training_data, csv_raw_test_data):
+    def normalize_data(csv_raw_training_data, csv_raw_test_data, training_data_store_path, test_data_store_path):
 
 
         columns_name_list = ['name', 'status']
@@ -40,8 +41,8 @@ class DataNormalizer:
        
         #convert dataframe to csv and store them in the data folder as
         #normalized_parkinsons_training and normalized_parkinsons_test
-        DataNormalizer.convert_dataframe_to_csv(modified_test_dataframe, 'data/normalized_parkinsons_test.data')
-        DataNormalizer.convert_dataframe_to_csv(modified_training_dataframe, 'data/normalized_parkinsons_training.data')
+        DataNormalizer.convert_dataframe_to_csv(modified_test_dataframe, test_data_store_path)
+        DataNormalizer.convert_dataframe_to_csv(modified_training_dataframe, training_data_store_path)
 
 
 
@@ -99,13 +100,39 @@ class DataNormalizer:
         dataframe.to_csv(filepath, index=False)
 
 
+class DataUndersampler:
+    
+    @staticmethod
+    def undersample_positives(raw_csv_data, data_store_path):
+
+        df = pd.read_csv(raw_csv_data)
+
+        #group patients by their ids, then rescue the status
+        patient_classes = df.groupby('name')['status'].first()
+
+        ids_positive = patient_classes[patient_classes == 1].index
+        ids_negative = patient_classes[patient_classes == 0].index
+
+        #undersample patients ids with positive status
+        ids_positive_downsampled = resample(ids_positive, 
+                                        replace=False, 
+                                        n_samples=len(ids_negative), 
+                                        random_state=42)
+
+        #create balanced dataframe
+        balanced_ids = list(ids_negative) + list(ids_positive_downsampled)
+        df_balanced = df[df['name'].isin(balanced_ids)]
+
+        DataNormalizer.convert_dataframe_to_csv(df_balanced, data_store_path)
+
+
 
 
 
 class DataSplitter:
 
 
-    def split(raw_csv_data, test_size):
+    def split(raw_csv_data, training_data_store_path, test_data_store_path, test_size):
 
         #assuring the correct split between 
         #training data and test data
@@ -136,8 +163,8 @@ class DataSplitter:
 
 
         #converting the new exctracted dataframes to different csv file in data folder
-        DataNormalizer.convert_dataframe_to_csv(training_dataframe, "data/raw/raw_parkinsons_training.data")
-        DataNormalizer.convert_dataframe_to_csv(test_dataframe, "data/raw/raw_parkinsons_test.data")
+        DataNormalizer.convert_dataframe_to_csv(training_dataframe, training_data_store_path)
+        DataNormalizer.convert_dataframe_to_csv(test_dataframe, test_data_store_path)
 
 
 
