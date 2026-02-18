@@ -130,9 +130,9 @@ class GradientBoostingModel:
         #by the number of rows in the test_dataframe
         mean_log_loss = mean(prediction_log_loss_list)
         std_dev_log_loss = stdev(prediction_log_loss_list)
-        recall = true_positive_count/(false_negative_count+true_positive_count)
-        precision = true_positive_count/(true_positive_count+false_positive_count)
-        f1 = 2*recall*precision/(precision+recall)
+        recall = true_positive_count/(false_negative_count+true_positive_count) if false_negative_count+true_positive_count > 0 else 0.0
+        precision = true_positive_count/(true_positive_count+false_positive_count) if false_positive_count+true_positive_count > 0 else 0.0
+        f1 = 2*recall*precision/(precision+recall) if precision+recall > 0 else 0.0
 
 
         return mean_log_loss, std_dev_log_loss, recall, precision, f1
