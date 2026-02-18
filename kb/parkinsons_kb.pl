@@ -144,9 +144,9 @@ inconsistency_isolated_nhr(Patient) :- has_feature(Patient, high_nhr),
                                        \+ has_feature(Patient, low_hnr).
 
 /*aggregate inconsistency check: any of the three patterns triggers a warning*/
-inconsistencies_warning(Patient) :- inconsistency_isolated_jitter(Patient).
-inconsistencies_warning(Patient) :- inconsistency_isolated_hnr(Patient).
-inconsistencies_warning(Patient) :- inconsistency_isolated_nhr(Patient).
+inconsistencies_warning(Patient, isolated_jitter) :- inconsistency_isolated_jitter(Patient).
+inconsistencies_warning(Patient, isolated_hnr) :- inconsistency_isolated_hnr(Patient).
+inconsistencies_warning(Patient, isolated_nhr) :- inconsistency_isolated_nhr(Patient).
 
 
 
@@ -164,10 +164,10 @@ validation(Patient, Prediction, Disease, Result) :-
     ->  Result = critical_error
     ;   critical_false_positive(Patient, Prediction, Disease)
     ->  Result = critical_error
-    ;   unreliable_diagnosis(Patient, Disease), \+ inconsistencies_warning(Patient)
+    ;   unreliable_diagnosis(Patient, Disease), \+ inconsistencies_warning(Patient, Inconstency)
     ->  Result = unreliable_evidence
-    ;   inconsistencies_warning(Patient)
-    ->  Result = conflictual_data
+    ;   inconsistencies_warning(Patient, Inconstency)
+    ->  Result = [conflictual_data, Inconstency]
     ;   coherent_prediction(Patient, Prediction, Disease)
     ->  Result = coherent
     ;   Result = warning
@@ -190,7 +190,7 @@ explain(Patient, Prediction, Disease, Evidence) :- findall(Symptom - Weight, (ha
 /*Diagnostic report*/
 report(Patient, Prediction, Disease, Evidence, Result, Evidence_strenght, Message) :- weighted_validation(Patient, Prediction, Disease, Result, Evidence_strenght),
                                                                 explain(Patient, Prediction, Disease, Evidence),
-                                                                format(atom(Message), "Evidenza di features: ~w. Stato: ~w. Evidenze : ~w. Predizione : ~w.", [Evidence_strenght, Result, Evidence, Prediction]).
+                                                                format(atom(Message), "Evidenza di features rinvenute : ~w.~n Stato e spiegazione di eventuale conflittualita': ~w.~n Feature evidenti, trovate con inferenza logica : ~w.~n Predizione ML model: ~w.", [Evidence_strenght, Result, Evidence, Prediction]).
 
 
 

@@ -12,7 +12,6 @@ kb_interface = KBInterface("kb/parkinsons_kb.pl")
 
 
 
-
 #==============================================================================
 #ENSEMBLE PREDICTION + KB VALIDATION ON TEST SET DERIVED FROM UNBALANCED DATASET
 #===============================================================================
@@ -32,6 +31,7 @@ conflictual_data_count = 0
 critical_error_count = 0
 severe_critical_count = 0
 moderate_critical_count = 0
+unreliable_evidence = 0
 coherent_count = 0
 total_count = len(normalized_test_dataframe)
 
@@ -50,7 +50,7 @@ for (norm_index, normalized_row), (non_norm_index,non_normalized_row) in zip(nor
 
         if result_str  == 'warning': 
             warning_count += 1
-        elif result_str == 'conflictual_data':
+        elif 'conflictual_data' in result_str or 'inconsistency' in result_str:
             conflictual_data_count += 1
         elif result_str == 'severe_critical_error':
             severe_critical_count += 1
@@ -58,10 +58,12 @@ for (norm_index, normalized_row), (non_norm_index,non_normalized_row) in zip(nor
             moderate_critical_count += 1
         elif result_str == 'critical_error':
             critical_error_count += 1
+        elif result_str == 'unreliable_evidence':
+             unreliable_evidence += 1
         elif result_str == 'coherent':
              coherent_count += 1
 
-        print(f"Predizione : {report[0]['Message']}")
+        print(f"ANALISI KB : \n\n{report[0]['Message']}")
 
 
 
@@ -71,13 +73,14 @@ conflictual_data_perc = conflictual_data_count/total_count
 critical_error_perc = critical_error_count/total_count
 coherent_perc = coherent_count/total_count
 
+print(f"Warning proportion: {warning_perc}\n conflictual data proportion : {conflictual_data_perc}\n Critical error proportion : {critical_error_perc}\n Coherent prediction proportion: {coherent_perc}")
 
 
 
 
 
 
-"""
+
 #==============================================================================
 #ENSEMBLE PREDICTION + KB VALIDATION ON TEST SET DERIVED FROM BALANCED DATASET
 #===============================================================================
@@ -97,6 +100,7 @@ conflictual_data_count = 0
 critical_error_count = 0
 severe_critical_count = 0
 moderate_critical_count = 0
+unreliable_evidence = 0
 coherent_count = 0
 total_count = len(normalized_test_dataframe)
 
@@ -115,7 +119,7 @@ for (norm_index, normalized_row), (non_norm_index,non_normalized_row) in zip(nor
 
         if result_str  == 'warning': 
             warning_count += 1
-        elif result_str == 'conflictual_data':
+        elif 'conflictual_data' in result_str or 'inconsistency' in result_str:
             conflictual_data_count += 1
         elif result_str == 'severe_critical_error':
             severe_critical_count += 1
@@ -123,10 +127,12 @@ for (norm_index, normalized_row), (non_norm_index,non_normalized_row) in zip(nor
             moderate_critical_count += 1
         elif result_str == 'critical_error':
             critical_error_count += 1
+        elif result_str == 'unreliable_evidence':
+             unreliable_evidence += 1
         elif result_str == 'coherent':
              coherent_count += 1
 
-        print(f"Predizione : {report[0]['Message']}")
+        print(f"ANALISI KB : \n\n{report[0]['Message']}")
 
 
 
@@ -136,4 +142,4 @@ conflictual_data_perc = conflictual_data_count/total_count
 critical_error_perc = critical_error_count/total_count
 coherent_perc = coherent_count/total_count
 
-"""
+print(f"Warning proportion: {warning_perc}\n conflictual data proportion : {conflictual_data_perc}\n Critical error proportion : {critical_error_perc}\n Coherent prediction proportion: {coherent_perc}")
