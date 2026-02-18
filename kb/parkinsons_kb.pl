@@ -45,12 +45,13 @@ vocal_profile(Patient, mixed_dysphonia)  :- has_feature(Patient, high_jitter), h
 vocal_profile(Patient, breath_dominant)  :- has_feature(Patient, high_nhr), \+ has_feature(Patient, high_jitter).
 
 
-/*count patient features and then assert the kb_confidence
-based on feature count (e.g. feature confidence >= 3, then high confidence)*/
+/*count patient features and then assert the kb_evidence_strenght
+based on feature count (e.g. feature evidence_strenght >= 3, then high evidence_strenght)*/
 feature_count(Patient, Count) :- findall(F, has_feature(Patient, F), Fs), length(Fs, Count).
-kb_confidence(Patient, high)   :- feature_count(Patient, Count), Count >= 3.
-kb_confidence(Patient, medium) :- feature_count(Patient, Count), Count =:= 2.
-kb_confidence(Patient, low)    :- feature_count(Patient, Count), Count =:= 1.
+kb_evidence_strenght(Patient, high)   :- feature_count(Patient, Count), Count >= 3.
+kb_evidence_strenght(Patient, medium) :- feature_count(Patient, Count), Count =:= 2.
+kb_evidence_strenght(Patient, low)    :- feature_count(Patient, Count), Count =:= 1.
+kb_evidence_strenght(Patient, none) :- feature_count(Patient, Count), Count =:= 0.
 
 
 /*general symptom inference*/
@@ -173,11 +174,11 @@ validation(Patient, Prediction, Disease, Result) :-
     ).
 
 
-/*include the kb_confidence based on features count, to weight inferred result
-with the kb confidence measure*/
-weighted_validation(Patient, Prediction, Disease, Result, Confidence) :-
+/*include the kb_evidence_strenght based on features count, to weight inferred result
+with the kb evidence_strenght measure*/
+weighted_validation(Patient, Prediction, Disease, Result, Evidence_strenght) :-
     validation(Patient, Prediction, Disease, Result),
-    kb_confidence(Patient, Confidence).
+    kb_evidence_strenght(Patient, Evidence_strenght).
 
 
 
@@ -186,9 +187,9 @@ explain(Patient, Prediction, Disease, Evidence) :- findall(Symptom-Weight, (has_
 
 
 /*Diagnostic report*/
-report(Patient, Prediction, Disease, Evidence, Result, Confidence, Message) :- weighted_validation(Patient, Prediction, Disease, Result, Confidence),
-                                                                explain(Patient, Prediction, Disease, Evidence),
-                                                                format(atom(Message), "Confidenza: ~w. Stato: ~w. Evidenze : ~w. Predizione : ~w.", [Confidence, Result, Evidence, Prediction]).
+report(Patient, Prediction, Disease, Evidence, Result, Evidence_strenght, Message) :- weighted_validation(Patient, Prediction, Disease, Result, Evidence_strenght),
+                                                                explain(Patient, Prediction, Disease, Evidence_strenght),
+                                                                format(atom(Message), "Confidenza: ~w. Stato: ~w. Evidenze : ~w. Predizione : ~w.", [Evidence_strenght, Result, Evidence, Prediction]).
 
 
 
