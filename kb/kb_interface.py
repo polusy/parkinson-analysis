@@ -34,15 +34,13 @@ class KBInterface:
             return results[0]['Result']
 
         else:
-            #query the complete inference chain from the basic symptoms to other abstracts features
-            #and produce a report message with the result, evidence (weighted diagnosys)
-            inference_chain = list(self._kb.query(f"inference_chain(patient, {model_prediction}, parkinson, Chain)"))
+            #produce an explanation report message, with result and evidence (weighted diagnosys)
             report = list(self._kb.query(f"report(patient, {model_prediction}, parkinson, Evidence, Result, Message)"))
 
             #retract previous assertions from the kb 
             self.retract_assertz_from_kb(selected_features_row)
             
-            return inference_chain, report
+            return report
         
 
 
