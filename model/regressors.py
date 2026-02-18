@@ -59,8 +59,8 @@ class LinearRegressionModel :
             
 
             #initialiazing the tollerance values
-            parameters_subtraction_norm_tol = 10**-3
-            gradient_norm_tol = 10**-3
+            parameters_subtraction_norm_tol = 10**-1
+            gradient_norm_tol = 10**-1
 
             #initializing the first with real parameters values and the second with high values
             #such that at first, verifying the condition in the loop, their subtraction is high
@@ -206,8 +206,8 @@ class LogisticRegressionModel :
         
 
         #initialiazing the tollerance values
-        parameters_subtraction_norm_tol = 10**-3
-        gradient_norm_tol = 10**-3
+        parameters_subtraction_norm_tol = 10**-1
+        gradient_norm_tol = 10**-1
 
         #initializing the first with real parameters value and the second with high values
         #such that at the first loop condition check, their subtraction is high

@@ -9,9 +9,9 @@ LINEAR_REG_HYPERPARAMETER = 10
 NUM_BOOSTING_ROUNDS = 2
 
 #regularization hyperparameters, found after cross-validation, for balanced dataset
-BAL_LOGISTIC_REG_HYPERPARAMETER = 0.1
-BAL_LINEAR_REG_HYPERPARAMETER = 10
-BAL_NUM_BOOSTING_ROUNDS = 2
+BAL_LOGISTIC_REG_HYPERPARAMETER = 0.001
+BAL_LINEAR_REG_HYPERPARAMETER = 0.001
+BAL_NUM_BOOSTING_ROUNDS = 3
 
 #learning rate hyperparameter (fixed, not found with cross-validation)
 LEARNING_RATE = 0.01

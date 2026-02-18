@@ -17,7 +17,6 @@ boosting_rounds_num_list = [2,3,5]
 
 
 
-
 #=================================================
 #UNBALANCED DATASET HYPERPARAMETERS CROSS-VALIDATION
 #=================================================
@@ -53,7 +52,7 @@ print(boosting_rounds_stats)
 
 
 
-
+"""
 #=================================================
 #BALANCED DATASET HYPERPARAMETERS CROSS-VALIDATION
 #=================================================
@@ -78,4 +77,4 @@ print(reg_hyperparameter_stats)
 #finding stats (mean and std. dev. of log loss over prediction evalutation on different validation sets) for different number of boosting rounds, using k-folds cross validation approach
 boosting_rounds_stats = BoostingRoundsCrossValidation.ensemble_model_boosting_rounds_cross_validate(boosting_rounds_num_list, BAL_LOGISTIC_REG_HYPERPARAMETER, BAL_LINEAR_REG_HYPERPARAMETER, training_dataframe=pd.read_csv("data/balanced/normalized/normalized_balanced_parkinsons_training.data"))
 print("cross-validation on boosting rounds")
-print(boosting_rounds_stats)
+print(boosting_rounds_stats)"""

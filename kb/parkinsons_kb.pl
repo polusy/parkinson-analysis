@@ -183,13 +183,14 @@ weighted_validation(Patient, Prediction, Disease, Result, Evidence_strenght) :-
 
 
 /*Explaining KB inference, showing weight assigned to each symptom*/
-explain(Patient, Prediction, Disease, Evidence) :- findall(Symptom-Weight, (has_symptom(Patient, Symptom), symptom_related_to_disease(Symptom, Disease), symptom_weight(Symptom, Weight)), Evidence).
+explain(Patient, Prediction, Disease, Evidence) :- findall(Symptom - Weight, (has_symptom(Patient, Symptom), symptom_related_to_disease(Symptom, Disease), symptom_weight(Symptom, Weight)), RawEvidence),
+                                                    list_to_set(RawEvidence, Evidence).
 
 
 /*Diagnostic report*/
 report(Patient, Prediction, Disease, Evidence, Result, Evidence_strenght, Message) :- weighted_validation(Patient, Prediction, Disease, Result, Evidence_strenght),
-                                                                explain(Patient, Prediction, Disease, Evidence_strenght),
-                                                                format(atom(Message), "Confidenza: ~w. Stato: ~w. Evidenze : ~w. Predizione : ~w.", [Evidence_strenght, Result, Evidence, Prediction]).
+                                                                explain(Patient, Prediction, Disease, Evidence),
+                                                                format(atom(Message), "Evidenza di features: ~w. Stato: ~w. Evidenze : ~w. Predizione : ~w.", [Evidence_strenght, Result, Evidence, Prediction]).
 
 
 

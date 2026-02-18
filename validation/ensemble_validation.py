@@ -53,7 +53,7 @@ class BoostingRoundsCrossValidation:
 
                 
                 #training a new ensemble for each iteration over the k-folds group
-                current_ensemble.fit(first_learner_hyperparam, first_learner_hyperparam, BATCHES_NUM, 
+                current_ensemble.fit(first_learner_hyperparam, lin_reg_hyperparameter, BATCHES_NUM, 
                                     LEARNING_RATE, training_dataframe=current_training_folders)
                 
                 #testing the ensemble on the validation folder, 

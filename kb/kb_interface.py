@@ -35,7 +35,7 @@ class KBInterface:
 
         else:
             #produce an explanation report message, with result and evidence (weighted diagnosys)
-            report = list(self._kb.query(f"report(patient, {model_prediction}, parkinson, Evidence, Result, Confidence, Message)"))
+            report = list(self._kb.query(f"report(patient, {model_prediction}, parkinson, Evidence, Result, Evidence_strenght, Message)"))
 
             #retract previous assertions from the kb 
             self.retract_assertz_from_kb(selected_features_row)
