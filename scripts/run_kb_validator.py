@@ -36,18 +36,18 @@ for (norm_index, normalized_row), (non_norm_index,non_normalized_row) in zip(nor
         discrete_pred = LogisticRegressionModel.binary_classify(continuous_pred)
 
         #rescue the result on the validation query on the kb
-        result = kb_interface.query_result_kb(non_normalized_row, discrete_pred, result_only=True)
+        report = kb_interface.query_result_kb(non_normalized_row, discrete_pred, result_only=False)
 
-        if 'warning' in str(result): 
+        if 'warning' in str(report[0]['Result']): 
             warning_count += 1
-        elif 'conflictual_data' in str(result):
+        elif 'conflictual_data' in str(report[0]['Result']):
             conflictual_data_count += 1
-        elif 'critical_error' in str(result):
+        elif 'critical_error' in str(report[0]['Result']):
              critical_error_count += 1
-        elif 'coherent' in str(result):
+        elif 'coherent' in str(report[0]['Result']):
              coherent_count += 1
 
-        print("Predizione : ", discrete_pred,  result, "Status reale : ", non_normalized_row['status'])
+        print(f"Predizione : {report[0]['Message']}")
 
 
 

@@ -184,13 +184,11 @@ weighted_validation(Patient, Prediction, Disease, Result, Confidence) :-
 /*Explaining KB inference, showing weight assigned to each symptom*/
 explain(Patient, Prediction, Disease, Evidence) :- findall(Symptom-Weight, (has_symptom(Patient, Symptom), symptom_related_to_disease(Symptom, Disease), symptom_weight(Symptom, Weight)), Evidence).
 
-/*using a List to store each symptom, super symptom relation*/
-inference_chain(Patient, Prediction, Disease, Chain) :- findall(Symptom-SuperSymptom, (has_symptom(Patient, Symptom), is_subtype_of(Symptom, SuperSymptom), symptom_related_to_disease(Symptom, Disease)), Chain).
 
 /*Diagnostic report*/
-report(Patient, Prediction, Disease, Evidence, Result, Message) :- validation(Patient, Prediction, Disease, Result),
+report(Patient, Prediction, Disease, Evidence, Result, Confidence, Message) :- weighted_validation(Patient, Prediction, Disease, Result, Confidence),
                                                                 explain(Patient, Prediction, Disease, Evidence),
-                                                                format(atom(Message), "Stato: ~w. Evidenze : ~w. Predizione : ~w.", [Result, Evidence, Prediction]).
+                                                                format(atom(Message), "Confidenza: ~w. Stato: ~w. Evidenze : ~w. Predizione : ~w.", [Confidence, Result, Evidence, Prediction]).
 
 
 
