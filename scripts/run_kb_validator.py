@@ -52,7 +52,7 @@ for (norm_index, normalized_row), (non_norm_index,non_normalized_row) in zip(nor
             moderate_critical_count += 1
         elif result_str == 'critical_error':
             critical_error_count += 1
-        elif 'coherent' in str(report[0]['Result']):
+        elif result_str == 'coherent':
              coherent_count += 1
 
         print(f"Predizione : {report[0]['Message']}")
