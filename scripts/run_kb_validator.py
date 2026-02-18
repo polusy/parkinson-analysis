@@ -24,6 +24,8 @@ non_normalized_test_dataframe = pd.read_csv("data/raw/raw_parkinsons_test.data")
 warning_count = 0
 conflictual_data_count = 0
 critical_error_count = 0
+severe_critical_count = 0
+moderate_critical_count = 0
 coherent_count = 0
 total_count = len(normalized_test_dataframe)
 
@@ -38,12 +40,18 @@ for (norm_index, normalized_row), (non_norm_index,non_normalized_row) in zip(nor
         #rescue the result on the validation query on the kb
         report = kb_interface.query_result_kb(non_normalized_row, discrete_pred, result_only=False)
 
-        if 'warning' in str(report[0]['Result']): 
+        result_str = str(report[0]['Result'])
+
+        if result_str  == 'warning': 
             warning_count += 1
-        elif 'conflictual_data' in str(report[0]['Result']):
+        elif result_str == 'conflictual_data':
             conflictual_data_count += 1
-        elif 'critical_error' in str(report[0]['Result']):
-             critical_error_count += 1
+        elif result_str == 'severe_critical_error':
+            severe_critical_count += 1
+        elif result_str == 'moderate_critical_error':
+            moderate_critical_count += 1
+        elif result_str == 'critical_error':
+            critical_error_count += 1
         elif 'coherent' in str(report[0]['Result']):
              coherent_count += 1
 
