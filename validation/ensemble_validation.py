@@ -25,8 +25,11 @@ class BoostingRoundsCrossValidation:
         groups = training_dataframe['name'].str.rsplit('_', n = 1).str[0]
 
         #instatiating a list in which each value will be
-        #the log loss of predictions on the validation folder
+        #the log loss, recall, precison, f1 of predictions on the validation folder
         k_folds_log_loss_list = []
+        k_folds_recall_list = []
+        k_folds_precision_list = []
+        k_folds_f1_list = []
 
         #we use a list of statistics (mean , stdev) of loss 
         #for each hyperparameter
@@ -60,16 +63,27 @@ class BoostingRoundsCrossValidation:
                 #storing the mean log loss (derived from test on validation folder) 
                 # at index correspondent to the index
                 # of the the relative hyperparameter in hyperparam_list
-                (mean_log_loss, log_loss_std_dev) = current_ensemble.test(test_dataframe=current_validation_folder)
-                k_folds_log_loss_list.append(mean_log_loss)
-
+                (log_loss, _, recall, precision, f1) = current_ensemble.test(test_dataframe=current_validation_folder)
+                k_folds_log_loss_list.append(log_loss)
+                k_folds_recall_list.append(recall)
+                k_folds_precision_list.append(precision)
+                k_folds_f1_list.append(f1)
 
             #computing and storing the mean, stdev of losses of prediction over k validation folders
             mean_log_loss = mean(k_folds_log_loss_list)
-            std_dev = stdev(k_folds_log_loss_list)
+            log_loss_std_dev = stdev(k_folds_log_loss_list)
+            mean_precision = mean(k_folds_precision_list)
+            precision_std_dev = stdev(k_folds_precision_list)
+            mean_recall = mean(k_folds_recall_list)
+            recall_std_dev = stdev(k_folds_recall_list)
+            mean_f1 = mean(k_folds_f1_list)
+            f1_std_dev = stdev(k_folds_f1_list)
 
             #storing the statistics for a given boosting rounds hyperparameter in a stats list
-            hyperparam_stats[i] = (boosting_rounds_num_list[i],mean_log_loss,std_dev)
+            hyperparam_stats[i] = (boosting_rounds_num_list[i],mean_log_loss,log_loss_std_dev,
+                                   mean_precision, precision_std_dev,
+                                  mean_recall, recall_std_dev,
+                                   mean_f1, f1_std_dev)
 
         return hyperparam_stats
             

@@ -95,6 +95,10 @@ class GradientBoostingModel:
 
 
         prediction_log_loss_list = [0]*len(test_dataframe)
+        true_positive_count = 0
+        true_negative_count = 0
+        false_positive_count = 0
+        false_negative_count = 0
 
         #iterating over the examples in the test dataframe
         for (example_index,example_features), (target_index,example_target) in zip(input_features_dataframe.iterrows(), target_feature_dataframe.items()):
@@ -106,14 +110,32 @@ class GradientBoostingModel:
             target_prediction = self.predict(vectorized_example_features)
             prediction_log_loss_list.append((example_target)*(-np.log(target_prediction)) + (1 - example_target)*(-np.log(1 - target_prediction)))
 
+            discrete_prediction = LogisticRegressionModel.binary_classify(target_prediction)
+
+            if discrete_prediction == 1:
+                if example_target == 1:
+                    true_positive_count += 1
+                else:
+                    false_positive_count += 1
+            else:
+                if example_target == 1:
+                    false_negative_count += 1
+                else:
+                    true_negative_count += 1
+
+
+
 
         #to compute the mean log loss, take the cumulative log loss and divide it 
         #by the number of rows in the test_dataframe
         mean_log_loss = mean(prediction_log_loss_list)
         std_dev_log_loss = stdev(prediction_log_loss_list)
+        recall = true_positive_count/(false_negative_count+true_positive_count)
+        precision = true_positive_count/(true_positive_count+false_positive_count)
+        f1 = 2*recall*precision/(precision+recall)
 
 
-        return mean_log_loss, std_dev_log_loss
+        return mean_log_loss, std_dev_log_loss, recall, precision, f1
                 
 
 
