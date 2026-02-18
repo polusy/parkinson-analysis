@@ -7,7 +7,7 @@ from statistics import mean,stdev
 class BoostingRoundsCrossValidation:
 
     @staticmethod
-    def ensemble_model_boosting_rounds_cross_validate(boosting_rounds_num_list, training_dataframe):
+    def ensemble_model_boosting_rounds_cross_validate(boosting_rounds_num_list,first_learner_hyperparam, lin_reg_hyperparameter, training_dataframe):
         
         """validate the ensemble model (gradient boosting model), on multiple number of boosting
         rounds"""
@@ -53,14 +53,15 @@ class BoostingRoundsCrossValidation:
 
                 
                 #training a new ensemble for each iteration over the k-folds group
-                current_ensemble.fit(LOGISTIC_REG_HYPERPARAMETER, LINEAR_REG_HYPERPARAMETER, BATCHES_NUM, 
+                current_ensemble.fit(first_learner_hyperparam, first_learner_hyperparam, BATCHES_NUM, 
                                     LEARNING_RATE, training_dataframe=current_training_folders)
                 
                 #testing the ensemble on the validation folder, 
                 #storing the mean log loss (derived from test on validation folder) 
                 # at index correspondent to the index
                 # of the the relative hyperparameter in hyperparam_list
-                k_folds_log_loss_list.append(current_ensemble.test(test_dataframe=current_validation_folder))
+                (mean_log_loss, log_loss_std_dev) = current_ensemble.test(test_dataframe=current_validation_folder)
+                k_folds_log_loss_list.append(mean_log_loss)
 
 
             #computing and storing the mean, stdev of losses of prediction over k validation folders
