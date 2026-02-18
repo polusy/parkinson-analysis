@@ -2,7 +2,7 @@
 from validation.ensemble_validation import BoostingRoundsCrossValidation
 from validation.weak_learners_validation import HyperparameterRegularizationCrossValidation
 import pandas as pd
-from utils.constants import LOGISTIC_REG_HYPERPARAMETER
+from utils.constants import LOGISTIC_REG_HYPERPARAMETER, BAL_LOGISTIC_REG_HYPERPARAMETER
 
 
 #using the same regularization hyperparameter list, because we use L2 reg. in both 
@@ -17,7 +17,7 @@ boosting_rounds_num_list = [2,3,5]
 
 
 
-
+"""
 
 #=================================================
 #UNBALANCED DATASET HYPERPARAMETERS CROSS-VALIDATION
@@ -42,7 +42,7 @@ print(reg_hyperparameter_stats)
 #finding stats (mean and std. dev. of log loss over prediction evalutation on different validation sets) for different number of boosting rounds, using k-folds cross validation approach
 boosting_rounds_stats = BoostingRoundsCrossValidation.ensemble_model_boosting_rounds_cross_validate(boosting_rounds_num_list, training_dataframe=pd.read_csv("data/unbalanced/normalized/normalized_parkinsons_training.data"))
 print("cross-validation on boosting rounds")
-print(boosting_rounds_stats)
+print(boosting_rounds_stats)"""
 
 
 
@@ -64,10 +64,10 @@ reg_hyperparameter_stats = HyperparameterRegularizationCrossValidation.log_regre
 print("cross-validation on logistic regressor regularization hyperparameter")
 print(reg_hyperparameter_stats)
 
-
+"""
 #finding the regularization hyperparameter that reduces mean squared and std. dev. of error using 
 #k-folds cross validation approach
-reg_hyperparameter_stats = HyperparameterRegularizationCrossValidation.lin_regressor_hyperparam_reg_cross_validate(LOGISTIC_REG_HYPERPARAMETER, reg_hyperparameter_list, training_dataframe=pd.read_csv("data/unbalanced/normalized/normalized_balanced_parkinsons_training.data"))
+reg_hyperparameter_stats = HyperparameterRegularizationCrossValidation.lin_regressor_hyperparam_reg_cross_validate(BAL_LOGISTIC_REG_HYPERPARAMETER, reg_hyperparameter_list, training_dataframe=pd.read_csv("data/unbalanced/normalized/normalized_balanced_parkinsons_training.data"))
 print("cross-validation on linear regressor regularization hyperparameter")
 print(reg_hyperparameter_stats)
 
@@ -76,4 +76,4 @@ print(reg_hyperparameter_stats)
 #finding stats (mean and std. dev. of log loss over prediction evalutation on different validation sets) for different number of boosting rounds, using k-folds cross validation approach
 boosting_rounds_stats = BoostingRoundsCrossValidation.ensemble_model_boosting_rounds_cross_validate(boosting_rounds_num_list, training_dataframe=pd.read_csv("data/unbalanced/normalized/normalized_balanced_parkinsons_training.data"))
 print("cross-validation on boosting rounds")
-print(boosting_rounds_stats)
+print(boosting_rounds_stats)"""
