@@ -11,7 +11,7 @@ import numpy as np
 kb_interface = KBInterface("kb/parkinsons_kb.pl")
 
 
-
+"""
 #==============================================================================
 #ENSEMBLE PREDICTION + KB VALIDATION ON TEST SET DERIVED FROM UNBALANCED DATASET
 #===============================================================================
@@ -75,7 +75,7 @@ coherent_perc = coherent_count/total_count
 
 print(f"Warning proportion: {warning_perc}\n conflictual data proportion : {conflictual_data_perc}\n Critical error proportion : {critical_error_perc}\n Coherent prediction proportion: {coherent_perc}")
 
-
+"""
 
 
 
